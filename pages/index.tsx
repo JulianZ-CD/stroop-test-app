@@ -47,7 +47,7 @@ export default function App() {
   return (
     <main>
       <div className="header">
-        <h1>{t("home.title")}</h1>
+        {/* <h1>{t("home.title")}</h1> */}
         <select
           value={locale}
           onChange={(e) => changeLocale(e.target.value as "en" | "zh")}
