@@ -13,6 +13,22 @@ main {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  width: 100%;
+  max-width: 1000px;
+  padding: 2rem;
+}
+
+/* Common elements */
+h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
 button {
@@ -27,12 +43,25 @@ button {
   transition: border-color 0.25s;
   color: white;
 }
+
 button:hover {
   border-color: #646cff;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+/* Home page specific */
+.header {
+  /* display: flex; */
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.todo-section {
+  margin-bottom: 2rem;
+}
+
+.todo-button {
+  margin-bottom: 1rem;
 }
 
 ul {
@@ -59,7 +88,120 @@ li:hover {
   background: #dadbf9;
 }
 
-a {
-  font-weight: 800;
-  text-decoration: none;
+.stroop-section {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-top: 2rem;
+}
+
+.section-description {
+  margin-bottom: 1rem;
+}
+
+/* Stroop test specific */
+.stroop-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.stroop-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+.stroop-progress {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.stroop-word {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 3rem;
+}
+
+.color-buttons {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.color-button {
+  width: 4rem;
+  height: 8rem;
+  border-radius: 1.5rem;
+  border: 0.5rem solid #e5e5e5;
+}
+
+.result-container {
+  text-align: center;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0;
+  font-size: 1.25rem;
+}
+
+.navigation-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.sign-out-button {
+  background-color: #000000;
+}
+
+.home-button {
+  background-color: #4b5563;
+}
+
+.start-button {
+  background-color: #059669;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin: 2rem 0;
+  text-align: left;
+}
+
+.result-section {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.result-section h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.result-section div {
+  margin-bottom: 0.5rem;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+.instructions {
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  text-align: center;
 }

@@ -12,6 +12,26 @@ const schema = a.schema({
       content: a.string(),
     })
     .authorization((allow) => [allow.owner()]),
+
+  StroopTest: a
+    .model({
+      userId: a.string(),
+      timestamp: a.string(),
+      rightFirstSeries: a.integer(),
+      rightSecondSeries: a.integer(),
+      mistakesFirstSeries: a.integer(),
+      mistakesSecondSeries: a.integer(),
+      averageResponsePercent: a.float(),
+      minTimeFirstSeries: a.integer(),
+      minTimeSecondSeries: a.integer(),
+      maxTimeFirstSeries: a.integer(),
+      maxTimeSecondSeries: a.integer(),
+      avgTimeFirstSeries: a.float(),
+      avgTimeSecondSeries: a.float(),
+      avgResponseDelay: a.float(),
+      testingTime: a.float(),
+    })
+    .authorization((allow) => [allow.owner()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
