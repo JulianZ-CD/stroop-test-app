@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { generateClient } from "aws-amplify/data";
 import { useRouter } from "next/router";
 import type { Schema } from "@/amplify/data/resource";
+import { useTranslation } from "@/contexts/LanguageContext";
 
 const client = generateClient<Schema>();
 
@@ -36,6 +37,7 @@ interface PreviousState {
 export default function StroopTest() {
   const { user } = useAuthenticator();
   const router = useRouter();
+  const { t } = useTranslation();
   const [testState, setTestState] = useState<
     "idle" | "first" | "second" | "completed"
   >("idle");
@@ -63,90 +65,93 @@ export default function StroopTest() {
   });
 
   const getNextIndex = (currentIndex: number, excludeIndex: number): number => {
-    console.log('---- getNextIndex ----');
-    console.log('Current index:', currentIndex);
-    console.log('Exclude index:', excludeIndex);
+    console.log("---- getNextIndex ----");
+    console.log("Current index:", currentIndex);
+    console.log("Exclude index:", excludeIndex);
 
     // Generate array of possible indices
-    const possibleIndices = Array.from({length: COLOR_NAMES.length}, (_, i) => i)
-      .filter(i => i !== currentIndex && i !== excludeIndex);
-    
-    console.log('Possible indices:', possibleIndices);
-    
+    const possibleIndices = Array.from(
+      { length: COLOR_NAMES.length },
+      (_, i) => i
+    ).filter((i) => i !== currentIndex && i !== excludeIndex);
+
+    console.log("Possible indices:", possibleIndices);
+
     // Randomly select from possible indices
-    const selectedIndex = possibleIndices[Math.floor(Math.random() * possibleIndices.length)];
-    console.log('Selected index:', selectedIndex);
-    console.log('-------------------');
-    
+    const selectedIndex =
+      possibleIndices[Math.floor(Math.random() * possibleIndices.length)];
+    console.log("Selected index:", selectedIndex);
+    console.log("-------------------");
+
     return selectedIndex;
   };
 
   const generateMatchedWord = useCallback(() => {
-    console.log('==== generateMatchedWord ====');
-    console.log('Previous state:', previousState);
-    
+    console.log("==== generateMatchedWord ====");
+    console.log("Previous state:", previousState);
+
     // Get next word index, excluding previous
     const newWordIndex = getNextIndex(previousState.wordIndex, -1);
-    
+
     const word = COLOR_NAMES[newWordIndex];
     const color = Object.values(COLORS)[newWordIndex] as ColorValue;
-    
+
     // Update previous state
     const newState = {
       wordIndex: newWordIndex,
-      colorIndex: newWordIndex // For matched words, both indices are the same
+      colorIndex: newWordIndex, // For matched words, both indices are the same
     };
-    console.log('New state:', newState);
-    
+    console.log("New state:", newState);
+
     const newWord = {
       word,
       textColor: color,
-      correctColor: color
+      correctColor: color,
     };
-    console.log('Generated word:', newWord);
-    console.log('========================');
-    
+    console.log("Generated word:", newWord);
+    console.log("========================");
+
     setPreviousState(newState);
     return newWord;
   }, [previousState]);
 
   const generateMismatchedWord = useCallback(() => {
-    console.log('==== generateMismatchedWord ====');
-    console.log('Previous state:', previousState);
-    
+    console.log("==== generateMismatchedWord ====");
+    console.log("Previous state:", previousState);
+
     // Get next indices, ensuring neither word nor color repeats
     const newWordIndex = getNextIndex(previousState.wordIndex, -1);
     const newColorIndex = getNextIndex(previousState.colorIndex, newWordIndex); // Also exclude matching word's color
-    
+
     const word = COLOR_NAMES[newWordIndex];
     const correctColor = Object.values(COLORS)[newWordIndex] as ColorValue;
     const textColor = Object.values(COLORS)[newColorIndex] as ColorValue;
-    
+
     // Update previous state
     const newState = {
       wordIndex: newWordIndex,
-      colorIndex: newColorIndex
+      colorIndex: newColorIndex,
     };
-    console.log('New state:', newState);
-    
+    console.log("New state:", newState);
+
     const newWord = {
       word,
       textColor,
-      correctColor
+      correctColor,
     };
-    console.log('Generated word:', newWord);
-    console.log('========================');
-    
+    console.log("Generated word:", newWord);
+    console.log("========================");
+
     setPreviousState(newState);
     return newWord;
   }, [previousState]);
 
   const startTest = useCallback(() => {
-    console.log('==== Starting Test ====');
+    console.log("==== Starting Test ====");
     // 重置所有状态
     setPreviousState({
       wordIndex: -1,
-      colorIndex: -1
+      colorIndex: -1,
     });
     const firstWord = generateMatchedWord();
     setCurrentWord(firstWord);
@@ -164,24 +169,24 @@ export default function StroopTest() {
       maxTimeSecondSeries: 0,
       responseTimes: [],
     });
-    console.log('Test started with word:', firstWord);
-    console.log('=====================');
+    console.log("Test started with word:", firstWord);
+    console.log("=====================");
   }, [generateMatchedWord]);
 
   const handleColorClick = useCallback(
     async (selectedColor: ColorValue) => {
-      console.log('==== handleColorClick ====');
-      console.log('Selected color:', selectedColor);
-      console.log('Current word:', currentWord);
-      console.log('Current state:', { testState, trialCount });
+      console.log("==== handleColorClick ====");
+      console.log("Selected color:", selectedColor);
+      console.log("Current word:", currentWord);
+      console.log("Current state:", { testState, trialCount });
 
       const responseTime = Date.now() - startTime;
       const isCorrect = selectedColor === currentWord.correctColor;
       const newTrialCount = trialCount + 1;
 
-      console.log('Response time:', responseTime);
-      console.log('Is correct:', isCorrect);
-      console.log('New trial count:', newTrialCount);
+      console.log("Response time:", responseTime);
+      console.log("Is correct:", isCorrect);
+      console.log("New trial count:", newTrialCount);
 
       setResults((prev) => {
         const newResults = { ...prev };
@@ -217,28 +222,29 @@ export default function StroopTest() {
       // Handle series transition
       let nextWord;
       if (newTrialCount === TRIALS_PER_SERIES) {
-        console.log('Switching to second series');
+        console.log("Switching to second series");
         setTestState("second");
         // Reset previous state for second phase
         setPreviousState({ wordIndex: -1, colorIndex: -1 });
         nextWord = generateMismatchedWord();
       } else if (newTrialCount === TRIALS_PER_SERIES * 2) {
-        console.log('Test completed');
+        console.log("Test completed");
         setTestState("completed");
         await saveResults();
         return;
       } else {
-        nextWord = testState === "first"
-          ? generateMatchedWord()
-          : generateMismatchedWord();
+        nextWord =
+          testState === "first"
+            ? generateMatchedWord()
+            : generateMismatchedWord();
       }
 
-      console.log('Next word:', nextWord);
-      
+      console.log("Next word:", nextWord);
+
       setCurrentWord(nextWord);
       setTrialCount(newTrialCount);
       setStartTime(Date.now());
-      console.log('=====================');
+      console.log("=====================");
     },
     [
       currentWord,
@@ -254,8 +260,11 @@ export default function StroopTest() {
     return (ms / 1000).toFixed(2) + "s";
   };
 
+  const getColorTranslationKey = (colorName: string): string =>
+    `stroopTest.colors.${colorName.toLowerCase()}`;
+
   const saveResults = async () => {
-    console.log('==== Saving Results ====');
+    console.log("==== Saving Results ====");
     const avgTime = (arr: number[]) =>
       arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
 
@@ -284,36 +293,42 @@ export default function StroopTest() {
         avgResponseDelay: avgTime(results.responseTimes),
         testingTime: (Date.now() - startTime) / 1000,
       });
-      console.log('Results saved successfully:', savedResult);
+      console.log("Results saved successfully:", savedResult);
     } catch (error) {
       console.error("Error saving results:", error);
     }
-    console.log('=====================');
+    console.log("=====================");
   };
 
   return (
     <main>
       <div className="stroop-container">
-        <h1 className="stroop-title">Stroop Test</h1>
+        <h1 className="stroop-title">{t("stroopTest.title")}</h1>
 
         {testState === "completed" ? (
           <div className="result-container">
-            <h2>Test Completed!</h2>
+            <h2>{t("stroopTest.results.completed")}</h2>
             <div className="result-grid">
               <div className="result-section">
-                <h3>Practice Round</h3>
-                <div>Correct Answers: {results.rightFirstSeries}</div>
-                <div>Mistakes: {results.mistakesFirstSeries}</div>
+                <h3>{t("stroopTest.results.practiceRound")}</h3>
                 <div>
-                  Minimum Response Time:{" "}
+                  {t("stroopTest.results.correctAnswers")}:{" "}
+                  {results.rightFirstSeries}
+                </div>
+                <div>
+                  {t("stroopTest.results.mistakes")}:{" "}
+                  {results.mistakesFirstSeries}
+                </div>
+                <div>
+                  {t("stroopTest.results.minResponseTime")}:{" "}
                   {formatTime(results.minTimeFirstSeries)}
                 </div>
                 <div>
-                  Maximum Response Time:{" "}
+                  {t("stroopTest.results.maxResponseTime")}:{" "}
                   {formatTime(results.maxTimeFirstSeries)}
                 </div>
                 <div>
-                  Average Response Time:{" "}
+                  {t("stroopTest.results.avgResponseTime")}:{" "}
                   {formatTime(
                     results.responseTimes
                       .slice(0, TRIALS_PER_SERIES)
@@ -323,19 +338,25 @@ export default function StroopTest() {
               </div>
 
               <div className="result-section">
-                <h3>Test Round</h3>
-                <div>Correct Answers: {results.rightSecondSeries}</div>
-                <div>Mistakes: {results.mistakesSecondSeries}</div>
+                <h3>{t("stroopTest.results.testRound")}</h3>
                 <div>
-                  Minimum Response Time:{" "}
+                  {t("stroopTest.results.correctAnswers")}:{" "}
+                  {results.rightSecondSeries}
+                </div>
+                <div>
+                  {t("stroopTest.results.mistakes")}:{" "}
+                  {results.mistakesSecondSeries}
+                </div>
+                <div>
+                  {t("stroopTest.results.minResponseTime")}:{" "}
                   {formatTime(results.minTimeSecondSeries)}
                 </div>
                 <div>
-                  Maximum Response Time:{" "}
+                  {t("stroopTest.results.maxResponseTime")}:{" "}
                   {formatTime(results.maxTimeSecondSeries)}
                 </div>
                 <div>
-                  Average Response Time:{" "}
+                  {t("stroopTest.results.avgResponseTime")}:{" "}
                   {formatTime(
                     results.responseTimes
                       .slice(TRIALS_PER_SERIES)
@@ -345,9 +366,9 @@ export default function StroopTest() {
               </div>
 
               <div className="result-section full-width">
-                <h3>Overall Performance</h3>
+                <h3>{t("stroopTest.results.overallPerformance")}</h3>
                 <div>
-                  Total Accuracy:{" "}
+                  {t("stroopTest.results.totalAccuracy")}:{" "}
                   {(
                     ((results.rightFirstSeries + results.rightSecondSeries) /
                       (TRIALS_PER_SERIES * 2)) *
@@ -356,59 +377,70 @@ export default function StroopTest() {
                   %
                 </div>
                 <div>
-                  Average Response Time:{" "}
+                  {t("stroopTest.results.avgResponseTime")}:{" "}
                   {formatTime(
                     results.responseTimes.reduce((a, b) => a + b, 0) /
                       (TRIALS_PER_SERIES * 2)
                   )}
                 </div>
                 <div>
-                  Total Testing Time: {formatTime(Date.now() - startTime)}
+                  {t("stroopTest.results.totalTestingTime")}:{" "}
+                  {formatTime(Date.now() - startTime)}
                 </div>
               </div>
             </div>
             <div className="navigation-buttons">
               <button onClick={() => window.location.reload()}>
-                Start New Test
+                {t("common.startNewTest")}
               </button>
               <button className="home-button" onClick={() => router.push("/")}>
-                Back to Home
+                {t("common.backToHome")}
               </button>
             </div>
           </div>
         ) : testState === "idle" ? (
           <div className="result-container">
             <p className="instructions">
-              In the first round (practice), the color of each word matches its
-              meaning.
+              {t("stroopTest.instructions.part1")}
               <br />
-              In the second round (test), the colors will be different from the
-              words.
+              {t("stroopTest.instructions.part2")}
               <br />
-              Always click the color that matches the MEANING of the word.
+              {t("stroopTest.instructions.part3")}
               <br />
-              Total trials: {TRIALS_PER_SERIES * 2} ({TRIALS_PER_SERIES} per
-              series)
+              {t("stroopTest.instructions.totalTrials", {
+                total: TRIALS_PER_SERIES * 2,
+                perSeries: TRIALS_PER_SERIES,
+              })}
             </p>
             <div className="navigation-buttons">
-              <button onClick={startTest}>Start Test</button>
+              <button onClick={startTest}>
+                {t("stroopTest.buttons.start")}
+              </button>
               <button className="home-button" onClick={() => router.push("/")}>
-                Back to Home
+                {t("common.backToHome")}
               </button>
             </div>
           </div>
         ) : (
           <>
             <div className="stroop-progress">
-              {testState === "first" ? "Practice Round" : "Test Round"}: Trial{" "}
-              {(trialCount % TRIALS_PER_SERIES) + 1} / {TRIALS_PER_SERIES}
+              {t(
+                testState === "first"
+                  ? "stroopTest.progress.practiceRound"
+                  : "stroopTest.progress.testRound"
+              )}
+              :{" "}
+              {t("stroopTest.progress.trial", {
+                current: (trialCount % TRIALS_PER_SERIES) + 1,
+                total: TRIALS_PER_SERIES,
+              })}
             </div>
 
             <div
               className="stroop-word"
               style={{ color: currentWord.textColor }}
             >
-              {currentWord.word}
+              {t(getColorTranslationKey(currentWord.word))}
             </div>
 
             <div className="color-buttons">
@@ -419,14 +451,14 @@ export default function StroopTest() {
                     onClick={() => handleColorClick(color)}
                     className="color-button"
                     style={{ backgroundColor: color }}
-                    aria-label={name.toLowerCase()}
+                    aria-label={t(getColorTranslationKey(name))}
                   />
                 )
               )}
             </div>
 
             <button className="home-button" onClick={() => router.push("/")}>
-              Back to Home
+              {t("common.backToHome")}
             </button>
           </>
         )}

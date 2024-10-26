@@ -6,11 +6,25 @@ This repository provides a starter template for creating applications using Next
 
 This template equips you with a foundational Next.js application integrated with AWS Amplify, streamlined for scalability and performance. It is ideal for developers looking to jumpstart their project with pre-configured AWS services like Cognito, AppSync, and DynamoDB.
 
+Based on [Next.js Pages Router](https://docs.amplify.aws/nextjs/start/quickstart/nextjs-pages-router/#4-set-up-local-environment)
+
 ## Features
 
 - **Authentication**: Setup with Amazon Cognito for secure user authentication.
 - **API**: Ready-to-use GraphQL endpoint with AWS AppSync.
 - **Database**: Real-time database powered by Amazon DynamoDB.
+
+## Deploying in local
+
+```bash
+# In terminal 1:
+npm run dev
+
+# In terminal 2:
+npx ampx sandbox
+
+# The npx ampx sandbox command should run concurrently to your npm run dev. You can think of the cloud sandbox as the "localhost-equivalent for your app backend".
+```
 
 ## Deploying to AWS
 

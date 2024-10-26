@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 import { useRouter } from "next/router";
+import { useTranslation } from "@/contexts/LanguageContext";
 
 const client = generateClient<Schema>();
 
@@ -10,6 +11,7 @@ export default function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
   const { user, signOut } = useAuthenticator();
   const router = useRouter();
+  const { t, locale, changeLocale } = useTranslation();
 
   function listTodos() {
     client.models.Todo.observeQuery().subscribe({
@@ -45,16 +47,25 @@ export default function App() {
   return (
     <main>
       <div className="header">
-        <h1>Stroop Test App</h1>
+        <h1>{t("home.title")}</h1>
+        <select
+          value={locale}
+          onChange={(e) => changeLocale(e.target.value as "en" | "zh")}
+          className="language-selector"
+        >
+          <option value="en">English</option>
+          <option value="zh">简体中文</option>
+          <option value="fr">Français</option>
+        </select>
         <button className="sign-out-button" onClick={signOut}>
-          Sign out
+          {t("common.signOut")}
         </button>
       </div>
 
       <div className="todo-section">
-        <h2>Todos</h2>
+        <h2>{t("home.todoSection.title")}</h2>
         <button className="todo-button" onClick={createTodo}>
-          + new todo
+          {t("home.todoSection.newTodo")}
         </button>
         <ul>
           {todos.map((todo) => (
@@ -66,12 +77,12 @@ export default function App() {
       </div>
 
       <div className="stroop-section">
-        <h2>Stroop Test</h2>
+        <h2>{t("home.stroopSection.title")}</h2>
         <p className="section-description">
-          Test your cognitive abilities with the Stroop Test
+          {t("home.stroopSection.description")}
         </p>
         <button className="start-button" onClick={() => router.push("/stroop")}>
-          Start Stroop Test
+          {t("home.stroopSection.startButton")}
         </button>
       </div>
     </main>
