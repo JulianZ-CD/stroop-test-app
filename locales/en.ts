@@ -24,6 +24,13 @@ export default {
         part3: "Always click the color that matches the MEANING of the word.",
         totalTrials: "Total trials: {{total}} ({{perSeries}} per series)",
       },
+      colors: {
+        red: "Red",
+        yellow: "Yellow",
+        blue: "Blue",
+        black: "Black",
+        green: "Green",
+      },
       progress: {
         practiceRound: "Practice Round",
         testRound: "Test Round",
