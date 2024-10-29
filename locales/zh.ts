@@ -1,4 +1,4 @@
-export default {
+const cnTranslations = {
   common: {
     signOut: "退出登录",
     backToHome: "返回首页",
@@ -54,3 +54,5 @@ export default {
     },
   },
 };
+
+export default cnTranslations;

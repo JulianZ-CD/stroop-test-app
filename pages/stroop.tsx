@@ -48,6 +48,20 @@ interface PreviousState {
     colorIndex: number;
 }
 
+interface Results {
+    rightFirstSeries: number;
+    rightSecondSeries: number;
+    mistakesFirstSeries: number;
+    mistakesSecondSeries: number;
+    minTimeFirstSeries: number;
+    minTimeSecondSeries: number;
+    maxTimeFirstSeries: number;
+    maxTimeSecondSeries: number;
+    responseTimes: number[];
+    selectedMusic: MusicOption | null;
+    username: string;
+}
+
 export default function StroopTest() {
     const {user} = useAuthenticator();
     const router = useRouter();
@@ -57,6 +71,8 @@ export default function StroopTest() {
     >("idle");
     const [selectedMusic, setSelectedMusic] = useState<MusicOption | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [username, setUsername] = useState("");
+    const [usernameError, setUsernameError] = useState("");
     const [trialCount, setTrialCount] = useState(0);
     const [currentWord, setCurrentWord] = useState<Word>({
         word: "red",
@@ -68,7 +84,7 @@ export default function StroopTest() {
         wordIndex: -1,
         colorIndex: -1,
     });
-    const [results, setResults] = useState({
+    const [results, setResults] = useState<Results>({
         rightFirstSeries: 0,
         rightSecondSeries: 0,
         mistakesFirstSeries: 0,
@@ -79,6 +95,7 @@ export default function StroopTest() {
         maxTimeSecondSeries: 0,
         responseTimes: [] as number[],
         selectedMusic: null as MusicOption | null,
+        username: "",
     });
 
     const getNextIndex = (currentIndex: number, excludeIndex: number): number => {
@@ -186,9 +203,52 @@ export default function StroopTest() {
         setSelectedMusic(music);
     };
 
+    // Add username validation function
+  const validateUsername = useCallback(async (name: string) => {
+    if (!name.trim()) {
+      setUsernameError(t("stroopTest.errors.usernameRequired"));
+      return false;
+    }
+
+    try {
+      const existingTests = await client.models.StroopTest.list({
+        filter: {
+          and: [
+            {
+              userId: {
+                eq: user.username
+              }
+            },
+            {
+              username: {
+                eq: name
+              }
+            }
+          ]
+        }
+      });
+
+      if (existingTests.data.length > 0) {
+        setUsernameError(t("stroopTest.errors.usernameTaken"));
+        return false;
+      }
+
+      setUsernameError("");
+      return true;
+    } catch (error) {
+      console.error("Error checking username:", error);
+      setUsernameError(t("stroopTest.errors.checkingUsername"));
+      return false;
+    }
+  }, [t, user.username]);
+
     const startTest = useCallback(async () => {
         if (!selectedMusic) {
             alert(t("stroopTest.alerts.selectMusic"));
+            return;
+        }
+
+        if (!await validateUsername(username)) {
             return;
         }
 
@@ -197,7 +257,6 @@ export default function StroopTest() {
                 await audioRef.current.play();
             }
 
-            // 重置所有状态
             setPreviousState({
                 wordIndex: -1,
                 colorIndex: -1,
@@ -218,12 +277,14 @@ export default function StroopTest() {
                 maxTimeSecondSeries: 0,
                 responseTimes: [],
                 selectedMusic,
+                username,
             });
         } catch (error) {
             console.error("Error starting test:", error);
         }
-    }, [generateMatchedWord, selectedMusic, t]);
+    }, [generateMatchedWord, selectedMusic, username, t, validateUsername]);
 
+    // Modify saveResults to use username from results
     const saveResults = useCallback(async () => {
         console.log("==== Saving Results ====");
         const avgTime = (arr: number[]) =>
@@ -232,6 +293,7 @@ export default function StroopTest() {
         try {
             const savedResult = await client.models.StroopTest.create({
                 userId: user.username,
+                username: results.username,  // 使用 results 中的 username
                 timestamp: new Date().toISOString(),
                 rightFirstSeries: results.rightFirstSeries,
                 rightSecondSeries: results.rightSecondSeries,
@@ -342,7 +404,7 @@ export default function StroopTest() {
             trialCount,
             generateMatchedWord,
             generateMismatchedWord,
-            saveResults, // 添加这个依赖
+            saveResults,
         ]
     );
 
@@ -466,6 +528,27 @@ export default function StroopTest() {
                             })}
                         </p>
 
+                        <div className="username-input-container">
+                            <label htmlFor="username" className="username-label">
+                                {t("common.greetings")}
+                            </label>
+                            <input
+                                id="username"
+                                type="text"
+                                value={username}
+                                onChange={(e) => {
+                                    setUsername(e.target.value);
+                                    if (usernameError) setUsernameError("");
+                                }}
+                                placeholder={t("stroopTest.placeholders.enterUsername")}
+                                className="input"
+                                maxLength={50}
+                            />
+                            {usernameError && (
+                                <div className="username-error">{usernameError}</div>
+                            )}
+                        </div>
+
                         <div className="music-selection">
                             <h3 className="music-title">{t("stroopTest.musicSelection.title")}</h3>
                             <div className="music-buttons">
@@ -489,8 +572,8 @@ export default function StroopTest() {
                         <div className="navigation-buttons">
                             <button
                                 onClick={startTest}
-                                className={!selectedMusic ? 'disabled' : ''}
-                                disabled={!selectedMusic}
+                                className={(!selectedMusic || !username.trim()) ? 'disabled' : ''}
+                                disabled={!selectedMusic || !username.trim()}
                             >
                                 {t("stroopTest.buttons.start")}
                             </button>

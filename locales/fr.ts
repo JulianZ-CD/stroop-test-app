@@ -1,4 +1,4 @@
-export default {
+const frTranslations = {
     common: {
       signOut: "Déconnexion",
       backToHome: "Retour à l'accueil",
@@ -54,3 +54,5 @@ export default {
       },
     },
   }
+
+export default frTranslations;

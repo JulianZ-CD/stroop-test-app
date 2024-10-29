@@ -25,6 +25,7 @@ const schema = a.schema({
             avgResponseDelay: a.float(),
             testingTime: a.float(),
             selectedMusic: a.string(),
+            username: a.string(),
         })
         .authorization((allow) => [allow.owner()]),
 });
