@@ -139,6 +139,7 @@ export default function StroopTest() {
               <button className="home-button" onClick={() => router.push("/")}>
                 {t("common.backToHome")}
               </button>
+
             </div>
           </div>
         </div>
