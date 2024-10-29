@@ -1,8 +1,9 @@
-export default {
-    common: {
+const enTranslations = {
+  common: {
         signOut: "Sign out",
         backToHome: "Back to Home",
         startNewTest: "Start New Test",
+        greetings: "Dear participant: ",
     },
     home: {
         title: "Stroop Test App",
@@ -30,6 +31,14 @@ export default {
             blue: "Blue",
             black: "Black",
             green: "Green",
+        },
+        errors: {
+            "usernameRequired": "Please enter a username",
+            "usernameTaken": "This username is already taken",
+            "checkingUsername": "Error checking username availability"
+        },
+        placeholders: {
+            "enterUsername": "Enter your preferred username"
         },
         progress: {
             practiceRound: "Practice Round",
@@ -64,3 +73,5 @@ export default {
         }
     },
 }
+
+export default enTranslations;
