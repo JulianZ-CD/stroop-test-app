@@ -25,11 +25,11 @@ const MUSIC_OPTIONS = {
     },
     POP: {
         name: "Pop_Music",
-        url: "/music/pop.mp3"
+        url: "/music/Lead Me On.mp3"
     },
     NO: {
         name: "No_Music",
-        url: "/music/no.mp3"
+        url: null
     }
 } as const;
 
@@ -164,11 +164,12 @@ export default function StroopTest() {
     }, [previousState]);
 
     useEffect(() => {
-        if (selectedMusic && !audioRef.current) {
+        if (selectedMusic && MUSIC_OPTIONS[selectedMusic].url) {
             const audio = new Audio(MUSIC_OPTIONS[selectedMusic].url);
             audio.loop = true;
             audioRef.current = audio;
         }
+
         return () => {
             if (audioRef.current) {
                 audioRef.current.pause();
@@ -178,14 +179,11 @@ export default function StroopTest() {
     }, [selectedMusic]);
 
     const handleMusicSelection = (music: MusicOption) => {
-        setSelectedMusic(music);
         if (audioRef.current) {
             audioRef.current.pause();
             audioRef.current = null;
         }
-        const audio = new Audio(MUSIC_OPTIONS[music].url);
-        audio.loop = true;
-        audioRef.current = audio;
+        setSelectedMusic(music);
     };
 
     const startTest = useCallback(async () => {
@@ -194,11 +192,11 @@ export default function StroopTest() {
             return;
         }
 
-        console.log("==== Starting Test ====");
         try {
             if (audioRef.current) {
                 await audioRef.current.play();
             }
+
             // 重置所有状态
             setPreviousState({
                 wordIndex: -1,
@@ -221,13 +219,48 @@ export default function StroopTest() {
                 responseTimes: [],
                 selectedMusic,
             });
-            console.log("Test started with word:", firstWord);
-            console.log("=====================");
         } catch (error) {
             console.error("Error starting test:", error);
-            alert(t("stroopTest.alerts.musicError"));
         }
     }, [generateMatchedWord, selectedMusic, t]);
+
+    const saveResults = useCallback(async () => {
+        console.log("==== Saving Results ====");
+        const avgTime = (arr: number[]) =>
+            arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+
+        try {
+            const savedResult = await client.models.StroopTest.create({
+                userId: user.username,
+                timestamp: new Date().toISOString(),
+                rightFirstSeries: results.rightFirstSeries,
+                rightSecondSeries: results.rightSecondSeries,
+                mistakesFirstSeries: results.mistakesFirstSeries,
+                mistakesSecondSeries: results.mistakesSecondSeries,
+                averageResponsePercent:
+                    ((results.rightFirstSeries + results.rightSecondSeries) /
+                        (TRIALS_PER_SERIES * 2)) *
+                    100,
+                minTimeFirstSeries: results.minTimeFirstSeries,
+                minTimeSecondSeries: results.minTimeSecondSeries,
+                maxTimeFirstSeries: results.maxTimeFirstSeries,
+                maxTimeSecondSeries: results.maxTimeSecondSeries,
+                avgTimeFirstSeries: avgTime(
+                    results.responseTimes.slice(0, TRIALS_PER_SERIES)
+                ),
+                avgTimeSecondSeries: avgTime(
+                    results.responseTimes.slice(TRIALS_PER_SERIES)
+                ),
+                avgResponseDelay: avgTime(results.responseTimes),
+                testingTime: (Date.now() - startTime) / 1000,
+                selectedMusic: results.selectedMusic,
+            });
+            console.log("Results saved successfully:", savedResult);
+        } catch (error) {
+            console.error("Error saving results:", error);
+        }
+        console.log("=====================");
+    }, [results, startTime, user.username]);
 
     const handleColorClick = useCallback(
         async (selectedColor: ColorValue) => {
@@ -309,6 +342,7 @@ export default function StroopTest() {
             trialCount,
             generateMatchedWord,
             generateMismatchedWord,
+            saveResults, // 添加这个依赖
         ]
     );
 
@@ -318,43 +352,6 @@ export default function StroopTest() {
 
     const getColorTranslationKey = (colorName: string): string =>
         `stroopTest.colors.${colorName.toLowerCase()}`;
-
-    const saveResults = async () => {
-        console.log("==== Saving Results ====");
-        const avgTime = (arr: number[]) =>
-            arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
-
-        try {
-            const savedResult = await client.models.StroopTest.create({
-                userId: user.username,
-                timestamp: new Date().toISOString(),
-                rightFirstSeries: results.rightFirstSeries,
-                rightSecondSeries: results.rightSecondSeries,
-                mistakesFirstSeries: results.mistakesFirstSeries,
-                mistakesSecondSeries: results.mistakesSecondSeries,
-                averageResponsePercent:
-                    ((results.rightFirstSeries + results.rightSecondSeries) /
-                        (TRIALS_PER_SERIES * 2)) *
-                    100,
-                minTimeFirstSeries: results.minTimeFirstSeries,
-                minTimeSecondSeries: results.minTimeSecondSeries,
-                maxTimeFirstSeries: results.maxTimeFirstSeries,
-                maxTimeSecondSeries: results.maxTimeSecondSeries,
-                avgTimeFirstSeries: avgTime(
-                    results.responseTimes.slice(0, TRIALS_PER_SERIES)
-                ),
-                avgTimeSecondSeries: avgTime(
-                    results.responseTimes.slice(TRIALS_PER_SERIES)
-                ),
-                avgResponseDelay: avgTime(results.responseTimes),
-                testingTime: (Date.now() - startTime) / 1000,
-            });
-            console.log("Results saved successfully:", savedResult);
-        } catch (error) {
-            console.error("Error saving results:", error);
-        }
-        console.log("=====================");
-    };
 
     return (
         <main>
