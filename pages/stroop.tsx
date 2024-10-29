@@ -224,6 +224,44 @@ export default function StroopTest() {
         }
     }, [generateMatchedWord, selectedMusic, t]);
 
+    const saveResults = useCallback(async () => {
+        console.log("==== Saving Results ====");
+        const avgTime = (arr: number[]) =>
+            arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+
+        try {
+            const savedResult = await client.models.StroopTest.create({
+                userId: user.username,
+                timestamp: new Date().toISOString(),
+                rightFirstSeries: results.rightFirstSeries,
+                rightSecondSeries: results.rightSecondSeries,
+                mistakesFirstSeries: results.mistakesFirstSeries,
+                mistakesSecondSeries: results.mistakesSecondSeries,
+                averageResponsePercent:
+                    ((results.rightFirstSeries + results.rightSecondSeries) /
+                        (TRIALS_PER_SERIES * 2)) *
+                    100,
+                minTimeFirstSeries: results.minTimeFirstSeries,
+                minTimeSecondSeries: results.minTimeSecondSeries,
+                maxTimeFirstSeries: results.maxTimeFirstSeries,
+                maxTimeSecondSeries: results.maxTimeSecondSeries,
+                avgTimeFirstSeries: avgTime(
+                    results.responseTimes.slice(0, TRIALS_PER_SERIES)
+                ),
+                avgTimeSecondSeries: avgTime(
+                    results.responseTimes.slice(TRIALS_PER_SERIES)
+                ),
+                avgResponseDelay: avgTime(results.responseTimes),
+                testingTime: (Date.now() - startTime) / 1000,
+                selectedMusic: results.selectedMusic,
+            });
+            console.log("Results saved successfully:", savedResult);
+        } catch (error) {
+            console.error("Error saving results:", error);
+        }
+        console.log("=====================");
+    }, [results, startTime, user.username]);
+
     const handleColorClick = useCallback(
         async (selectedColor: ColorValue) => {
             console.log("==== handleColorClick ====");
@@ -304,6 +342,7 @@ export default function StroopTest() {
             trialCount,
             generateMatchedWord,
             generateMismatchedWord,
+            saveResults, // 添加这个依赖
         ]
     );
 
@@ -313,44 +352,6 @@ export default function StroopTest() {
 
     const getColorTranslationKey = (colorName: string): string =>
         `stroopTest.colors.${colorName.toLowerCase()}`;
-
-    const saveResults = async () => {
-        console.log("==== Saving Results ====");
-        const avgTime = (arr: number[]) =>
-            arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
-
-        try {
-            const savedResult = await client.models.StroopTest.create({
-                userId: user.username,
-                timestamp: new Date().toISOString(),
-                rightFirstSeries: results.rightFirstSeries,
-                rightSecondSeries: results.rightSecondSeries,
-                mistakesFirstSeries: results.mistakesFirstSeries,
-                mistakesSecondSeries: results.mistakesSecondSeries,
-                averageResponsePercent:
-                    ((results.rightFirstSeries + results.rightSecondSeries) /
-                        (TRIALS_PER_SERIES * 2)) *
-                    100,
-                minTimeFirstSeries: results.minTimeFirstSeries,
-                minTimeSecondSeries: results.minTimeSecondSeries,
-                maxTimeFirstSeries: results.maxTimeFirstSeries,
-                maxTimeSecondSeries: results.maxTimeSecondSeries,
-                avgTimeFirstSeries: avgTime(
-                    results.responseTimes.slice(0, TRIALS_PER_SERIES)
-                ),
-                avgTimeSecondSeries: avgTime(
-                    results.responseTimes.slice(TRIALS_PER_SERIES)
-                ),
-                avgResponseDelay: avgTime(results.responseTimes),
-                testingTime: (Date.now() - startTime) / 1000,
-                selectedMusic: results.selectedMusic,
-            });
-            console.log("Results saved successfully:", savedResult);
-        } catch (error) {
-            console.error("Error saving results:", error);
-        }
-        console.log("=====================");
-    };
 
     return (
         <main>
