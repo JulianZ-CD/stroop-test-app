@@ -29,7 +29,7 @@ const MUSIC_OPTIONS = {
     },
     NO: {
         name: "No_Music",
-        url: "/music/no.mp3"
+        url: null
     }
 } as const;
 
@@ -164,11 +164,12 @@ export default function StroopTest() {
     }, [previousState]);
 
     useEffect(() => {
-        if (selectedMusic && !audioRef.current) {
+        if (selectedMusic && MUSIC_OPTIONS[selectedMusic].url) {
             const audio = new Audio(MUSIC_OPTIONS[selectedMusic].url);
             audio.loop = true;
             audioRef.current = audio;
         }
+
         return () => {
             if (audioRef.current) {
                 audioRef.current.pause();
@@ -178,14 +179,11 @@ export default function StroopTest() {
     }, [selectedMusic]);
 
     const handleMusicSelection = (music: MusicOption) => {
-        setSelectedMusic(music);
         if (audioRef.current) {
             audioRef.current.pause();
             audioRef.current = null;
         }
-        const audio = new Audio(MUSIC_OPTIONS[music].url);
-        audio.loop = true;
-        audioRef.current = audio;
+        setSelectedMusic(music);
     };
 
     const startTest = useCallback(async () => {
@@ -194,11 +192,11 @@ export default function StroopTest() {
             return;
         }
 
-        console.log("==== Starting Test ====");
         try {
             if (audioRef.current) {
                 await audioRef.current.play();
             }
+
             // 重置所有状态
             setPreviousState({
                 wordIndex: -1,
@@ -221,11 +219,8 @@ export default function StroopTest() {
                 responseTimes: [],
                 selectedMusic,
             });
-            console.log("Test started with word:", firstWord);
-            console.log("=====================");
         } catch (error) {
             console.error("Error starting test:", error);
-            alert(t("stroopTest.alerts.musicError"));
         }
     }, [generateMatchedWord, selectedMusic, t]);
 
@@ -348,6 +343,7 @@ export default function StroopTest() {
                 ),
                 avgResponseDelay: avgTime(results.responseTimes),
                 testingTime: (Date.now() - startTime) / 1000,
+                selectedMusic: results.selectedMusic,
             });
             console.log("Results saved successfully:", savedResult);
         } catch (error) {
