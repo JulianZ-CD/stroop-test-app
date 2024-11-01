@@ -1,39 +1,66 @@
-## AWS Amplify Next.js (Pages) Starter Template
+# Stroop Test Application with AWS Amplify
 
-This repository provides a starter template for creating applications using Next.js (Pages) and AWS Amplify, emphasizing easy setup for authentication, API, and database capabilities.
-
-## Overview
-
-This template equips you with a foundational Next.js application integrated with AWS Amplify, streamlined for scalability and performance. It is ideal for developers looking to jumpstart their project with pre-configured AWS services like Cognito, AppSync, and DynamoDB.
-
-Based on [Next.js Pages Router](https://docs.amplify.aws/nextjs/start/quickstart/nextjs-pages-router/#4-set-up-local-environment)
+This application is a full-stack Next.js implementation of the Stroop Test, integrated with AWS Amplify for backend services. The Stroop Test is a widely used psychological test that measures cognitive abilities and response times.
 
 ## Features
 
-- **Authentication**: Setup with Amazon Cognito for secure user authentication.
-- **API**: Ready-to-use GraphQL endpoint with AWS AppSync.
-- **Database**: Real-time database powered by Amazon DynamoDB.
+### Core Functionality
+- **Stroop Test Implementation**
+  - Practice round with matching colors and words
+  - Test round with mismatched colors and words
+  - Response time measurement
+  - Comprehensive result analysis
+  - Background music options during the test
+  - Multi-language support (English, Chinese, French)
 
-## Deploying in local
+### Technical Features
+- **Authentication**: Secure user authentication via Amazon Cognito
+- **Data Storage**: Real-time data persistence with AWS AppSync and DynamoDB
+- **Internationalization**: Support for multiple languages
+- **Todo List**: Basic todo functionality for demonstration purposes
 
+## Technology Stack
+- Frontend: Next.js (Pages Router)
+- Backend: AWS Amplify
+- Authentication: Amazon Cognito
+- Database: Amazon DynamoDB
+- API: AWS AppSync (GraphQL)
+- Styling: Custom CSS
+
+## Getting Started
+
+### Local Development
+1. Clone the repository
 ```bash
-# In terminal 1:
-npm run dev
-
-# In terminal 2:
-npx ampx sandbox
-
-# The npx ampx sandbox command should run concurrently to your npm run dev. You can think of the cloud sandbox as the "localhost-equivalent for your app backend".
+git clone <repository-url>
+cd <project-directory>
 ```
 
-## Deploying to AWS
+2. Install dependencies
+```bash
+npm install
+```
 
+3. Configure local development environment:
+   - Download `amplify_outputs.json` from your AWS Amplify Console
+   - Place it in the root directory of your project
+   - In a new terminal, start the Amplify sandbox:
+```bash
+npx ampx sandbox
+```
+
+4. Start the development server
+```bash
+npm run dev
+```
+
+> Note: The application will be available at http://localhost:3000
+
+### Deployment
 For detailed instructions on deploying your application, refer to the [deployment section](https://docs.amplify.aws/nextjs/start/quickstart/nextjs-pages-router/#deploy-a-fullstack-app-to-aws) of our documentation.
 
-## Security
-
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+## Contributing
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## License
-
-This library is licensed under the MIT-0 License. See the LICENSE file.
+This project is licensed under the MIT-0 License - see the [LICENSE](LICENSE) file for details.
