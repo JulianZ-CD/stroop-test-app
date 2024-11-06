@@ -308,6 +308,7 @@ export function useStroopGame(userId: string) {
   };
 
   const startTest = useCallback(async () => {
+
     let hasError = false;
 
     if (!username.trim()) {
@@ -315,13 +316,13 @@ export function useStroopGame(userId: string) {
       hasError = true;
     }
 
-    if (!selectedGender) {
-      setGenderError(t("stroopTest.errors.genderRequired"));
+    if (!selectedMusic) {
+      setMusicError(t("stroopTest.errors.musicRequired"));
       hasError = true;
     }
 
-    if (!selectedMusic) {
-      setMusicError(t("stroopTest.errors.musicRequired"));
+    if (!selectedGender) {
+      setGenderError(t("stroopTest.errors.genderRequired"));
       hasError = true;
     }
 
@@ -362,7 +363,7 @@ export function useStroopGame(userId: string) {
     } catch (error) {
       console.error("Error starting test:", error);
     }
-  }, [generateMatchedWord, selectedMusic, t, username, validateUsername]);
+  }, [generateMatchedWord, selectedMusic, t, username, validateUsername, selectedGender]);
 
   return {
     testState,
