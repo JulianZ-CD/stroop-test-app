@@ -18,6 +18,7 @@ export const COLORS = {
 
 export const COLOR_NAMES = ["red", "yellow", "blue", "black", "green"] as const;
 export const TRIALS_PER_SERIES = 10;
+export const MAX_MISTAKES_ALLOWED = TRIALS_PER_SERIES * 10.2;
 
 export const MUSIC_OPTIONS = {
   MOZART: {

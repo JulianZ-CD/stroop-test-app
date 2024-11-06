@@ -11,6 +11,7 @@ import {
   TRIALS_PER_SERIES,
   COLORS,
   MUSIC_OPTIONS,
+  MAX_MISTAKES_ALLOWED,
 } from "@/pages/stroop";
 
 const client = generateClient<Schema>();
@@ -73,6 +74,7 @@ export function useStroopGame(userId: string) {
     selectedMusic: null,
     username: "",
   });
+  const hasShownError = useRef(false);
 
   const handleMusicSelection = useCallback((music: MusicOption) => {
     if (audioRef.current) {
@@ -154,8 +156,7 @@ export function useStroopGame(userId: string) {
   const generateMatchedWord = useCallback(() => {
     const newWordIndex = getNextIndex(previousState.wordIndex, -1);
     const word = COLOR_NAMES[newWordIndex];
-    // const color = Object.values(COLORS)[newWordIndex] as ColorValue;
-    const color = COLORS.BLACK;
+    const correctColor = Object.values(COLORS)[newWordIndex] as ColorValue;
 
     setPreviousState({
       wordIndex: newWordIndex,
@@ -164,8 +165,8 @@ export function useStroopGame(userId: string) {
 
     return {
       word,
-      textColor: color,
-      correctColor: color,
+      textColor: COLORS.BLACK,
+      correctColor: correctColor,
     };
   }, [previousState, getNextIndex]);
 
@@ -202,11 +203,26 @@ export function useStroopGame(userId: string) {
         if (testState === "first") {
           if (isCorrect) newResults.rightFirstSeries++;
           else newResults.mistakesFirstSeries++;
+
+          if (newResults.mistakesFirstSeries >= MAX_MISTAKES_ALLOWED && !hasShownError.current) {
+            hasShownError.current = true;
+            alert(t("stroopTest.alerts.tooManyErrors"));
+            window.location.reload();
+            return prev;
+          }
+
           newResults.minTimeFirstSeries = Math.min(newResults.minTimeFirstSeries, responseTime);
           newResults.maxTimeFirstSeries = Math.max(newResults.maxTimeFirstSeries, responseTime);
         } else {
           if (isCorrect) newResults.rightSecondSeries++;
           else newResults.mistakesSecondSeries++;
+
+          if (newResults.mistakesFirstSeries >= MAX_MISTAKES_ALLOWED && !hasShownError.current) {
+            hasShownError.current = true;
+            alert(t("stroopTest.alerts.tooManyErrors"));
+            window.location.reload();
+            return prev;
+          }
           newResults.minTimeSecondSeries = Math.min(newResults.minTimeSecondSeries, responseTime);
           newResults.maxTimeSecondSeries = Math.max(newResults.maxTimeSecondSeries, responseTime);
         }
