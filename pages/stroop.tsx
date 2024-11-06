@@ -71,6 +71,7 @@ export default function StroopTest() {
     username,
     usernameError,
     selectedMusic,
+    musicError,
     trialCount,
     handleColorClick,
     setUsername,
@@ -126,13 +127,12 @@ export default function StroopTest() {
               selectedMusic={selectedMusic}
               onMusicSelect={handleMusicSelection}
               musicOptions={MUSIC_OPTIONS}
+              musicError={musicError}
             />
 
             <div className="navigation-buttons">
               <button
                 onClick={startTest}
-                className={!selectedMusic || !username.trim() ? "disabled" : ""}
-                disabled={!selectedMusic || !username.trim()}
               >
                 {t("stroopTest.buttons.start")}
               </button>

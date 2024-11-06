@@ -23,7 +23,7 @@ export function UsernameInput({ username, usernameError, onUsernameChange }: Use
         className="input"
         maxLength={50}
       />
-      {usernameError && <div className="username-error">{usernameError}</div>}
+      {usernameError && <div className="error-message">{usernameError}</div>}
     </div>
   );
 }

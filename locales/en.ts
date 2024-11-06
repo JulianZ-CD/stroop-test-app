@@ -36,6 +36,8 @@ const enTranslations = {
       usernameRequired: "Please enter a username",
       usernameTaken: "This username is already taken",
       checkingUsername: "Error checking username availability",
+      musicRequired: "Please select background music first",
+      musicError: "Error playing music, please try again",
     },
     placeholders: {
       enterUsername: "Enter your preferred username",
@@ -48,8 +50,6 @@ const enTranslations = {
     alerts: {
       tooManyErrors:
         "The error rate is too high, please answer the questions carefully. The test will be restarted.",
-      selectMusic: "Please select background music first",
-      musicError: "Error playing music, please try again",
     },
     results: {
       completed: "Test Completed!",

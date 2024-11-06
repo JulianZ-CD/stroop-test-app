@@ -48,6 +48,7 @@ export function useStroopGame(userId: string) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [username, setUsername] = useState("");
   const [usernameError, setUsernameError] = useState("");
+  const [musicError, setMusicError] = useState<string>("");
   const [trialCount, setTrialCount] = useState(0);
   const [startTime, setStartTime] = useState(0);
   const [previousState, setPreviousState] = useState<PreviousState>({
@@ -79,6 +80,7 @@ export function useStroopGame(userId: string) {
       audioRef.current = null;
     }
     setSelectedMusic(music);
+    setMusicError("");
   }, []);
 
   useEffect(() => {
@@ -283,7 +285,7 @@ export function useStroopGame(userId: string) {
 
   const startTest = useCallback(async () => {
     if (!selectedMusic) {
-      alert(t("stroopTest.alerts.selectMusic"));
+      setMusicError(t("stroopTest.errors.musicRequired"));
       return;
     }
 
@@ -330,6 +332,7 @@ export function useStroopGame(userId: string) {
     startTime,
     username,
     usernameError,
+    musicError,
     selectedMusic,
     trialCount,
     handleColorClick,

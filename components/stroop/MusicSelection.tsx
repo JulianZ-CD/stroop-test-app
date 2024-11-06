@@ -5,12 +5,14 @@ interface MusicSelectionProps {
   selectedMusic: MusicOption | null;
   onMusicSelect: (music: MusicOption) => void;
   musicOptions: typeof MUSIC_OPTIONS;
+  musicError?: string;
 }
 
 export function MusicSelection({
   selectedMusic,
   onMusicSelect,
   musicOptions,
+  musicError,
 }: MusicSelectionProps) {
   const { t } = useTranslation();
 
@@ -31,6 +33,7 @@ export function MusicSelection({
           )
         )}
       </div>
+      {musicError && <div className="error-message">{musicError}</div>}
     </div>
   );
 }

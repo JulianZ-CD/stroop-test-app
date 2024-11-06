@@ -223,3 +223,14 @@ li:hover {
   margin-right: 16px;
   background-color: white;
 }
+
+.error-message {
+  color: #dc2626;
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-top: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
