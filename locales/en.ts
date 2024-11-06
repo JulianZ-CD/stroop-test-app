@@ -20,7 +20,7 @@ const enTranslations = {
   stroopTest: {
     title: "Stroop Test",
     instructions: {
-      part1: "In the first round (practice), the color of each word matches its meaning.",
+      part1: "In the first round (practice), all words displayed in black color.",
       part2: "In the second round (test), the colors will be different from the words.",
       part3: "Always click the color that matches the MEANING of the word.",
       totalTrials: "Total trials: {{total}} ({{perSeries}} per series)",
@@ -53,7 +53,7 @@ const enTranslations = {
         "The error rate is too high, please answer the questions carefully. The test will be restarted.",
     },
     results: {
-      completed: "Test Completed!",
+      completed: "Test Completed! Congratulations!",
       practiceRound: "Practice Round",
       testRound: "Test Round",
       overallPerformance: "Overall Performance",
