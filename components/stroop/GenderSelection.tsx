@@ -6,12 +6,16 @@ interface GenderSelectionProps {
   onGenderSelect: (gender: string) => void;
 }
 
-export function GenderSelection({ selectedGender, genderError, onGenderSelect }: GenderSelectionProps) {
+export function GenderSelection({
+  selectedGender,
+  genderError,
+  onGenderSelect,
+}: GenderSelectionProps) {
   const { t } = useTranslation();
 
   return (
     <div className="gender-selection-container">
-      <label className="gender-label">{t("stroopTest.gender.label")}</label>
+      <h3 className="title">{t("stroopTest.gender.label")}</h3>
       <div className="gender-options">
         <label>
           <input
@@ -37,4 +41,4 @@ export function GenderSelection({ selectedGender, genderError, onGenderSelect }:
       {genderError && <div className="error-message">{genderError}</div>}
     </div>
   );
-} 
+}

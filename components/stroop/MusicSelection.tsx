@@ -18,14 +18,15 @@ export function MusicSelection({
 
   return (
     <div className="music-selection">
-      <h3 className="music-title">{t("stroopTest.musicSelection.title")}</h3>
-      <div className="music-buttons">
+      <h3 className="title">{t("stroopTest.musicSelection.title")}</h3>
+      <div className="button">
         {(Object.entries(musicOptions) as [MusicOption, (typeof MUSIC_OPTIONS)[MusicOption]][]).map(
           ([key, option]) => (
             <button
               key={key}
               onClick={() => onMusicSelect(key)}
-              className={`music-button ${selectedMusic === key ? "selected" : ""}`}
+              className={`button ${selectedMusic === key ? "selected" : ""}`}
+              style={{ margin: "0.2rem" }}
             >
               {t(`stroopTest.musicSelection.${option.name.toLowerCase()}`)}
               {selectedMusic === key && <span className="checkmark">✓</span>}
