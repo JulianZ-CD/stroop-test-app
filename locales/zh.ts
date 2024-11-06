@@ -3,6 +3,7 @@ const cnTranslations = {
     signOut: "退出登录",
     backToHome: "返回首页",
     startNewTest: "开始新测试",
+    greetings: "亲爱的参与者：",
   },
   home: {
     title: "斯特鲁普测试应用",
@@ -19,7 +20,7 @@ const cnTranslations = {
   stroopTest: {
     title: "斯特鲁普测试",
     instructions: {
-      part1: "在第一轮（练习轮）中，每个单词的颜色与其含义相匹配。",
+      part1: "在第一轮（练习轮）中，所有单词都显示为黑色。",
       part2: "在第二轮（测试轮）中，颜色将与单词不同。",
       part3: "请始终点击与单词含义相匹配的颜色。",
       totalTrials: "总试验次数：{{total}}（每轮{{perSeries}}次）",
@@ -51,6 +52,32 @@ const cnTranslations = {
     },
     buttons: {
       start: "开始测试",
+    },
+    errors: {
+      usernameRequired: "请输入用户名",
+      usernameTaken: "该用户名已被使用",
+      checkingUsername: "检查用户名可用性时出错",
+      musicRequired: "请先选择背景音乐",
+      musicError: "播放音乐时出错，请重试",
+      genderRequired: "请选择性别"
+    },
+    alerts: {
+      tooManyErrors: "错误率过高，请认真回答问题。测试将重新开始。",
+    },
+    musicSelection: {
+      title: "选择背景音乐",
+      mozart: "莫扎特",
+      pop_music: "流行音乐",
+      no_music: "不播放音乐"
+    },
+    gender: {
+      label: "请选择您的性别",
+      male: "男",
+      female: "女"
+    },
+    username: {
+      title: "请输入用户名",
+      placeholders: "请输入您的昵称",
     },
   },
 };

@@ -6,7 +6,7 @@ This application is a full-stack Next.js implementation of the Stroop Test, inte
 
 ### Core Functionality
 - **Stroop Test Implementation**
-  - Practice round with matching colors and words
+  - Practice round with all words displayed in black color
   - Test round with mismatched colors and words
   - Response time measurement
   - Comprehensive result analysis

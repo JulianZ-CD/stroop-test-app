@@ -6,11 +6,7 @@ interface UsernameInputProps {
   onUsernameChange: (username: string) => void;
 }
 
-export function UsernameInput({
-                                username,
-                                usernameError,
-                                onUsernameChange,
-                              }: UsernameInputProps) {
+export function UsernameInput({ username, usernameError, onUsernameChange }: UsernameInputProps) {
   const { t } = useTranslation();
 
   return (
@@ -18,16 +14,17 @@ export function UsernameInput({
       <label htmlFor="username" className="username-label">
         {t("common.greetings")}
       </label>
+      <h3 className="title">{t("stroopTest.username.title")}</h3>
       <input
         id="username"
         type="text"
         value={username}
         onChange={(e) => onUsernameChange(e.target.value)}
-        placeholder={t("stroopTest.placeholders.enterUsername")}
+        placeholder={t("stroopTest.username.placeholders")}
         className="input"
         maxLength={50}
       />
-      {usernameError && <div className="username-error">{usernameError}</div>}
+      {usernameError && <div className="error-message">{usernameError}</div>}
     </div>
   );
 }

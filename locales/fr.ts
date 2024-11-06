@@ -3,6 +3,7 @@ const frTranslations = {
       signOut: "Déconnexion",
       backToHome: "Retour à l'accueil",
       startNewTest: "Nouveau test",
+      greetings: "Cher participant : ",
     },
     home: {
       title: "Application de Test de Stroop",
@@ -19,7 +20,7 @@ const frTranslations = {
     stroopTest: {
       title: "Test de Stroop",
       instructions: {
-        part1: "Dans la première série (pratique), la couleur de chaque mot correspond à sa signification.",
+        part1: "Dans la première série (pratique), tous les mots sont affichés en noir.",
         part2: "Dans la deuxième série (test), les couleurs seront différentes des mots.",
         part3: "Cliquez toujours sur la couleur qui correspond à la SIGNIFICATION du mot.",
         totalTrials: "Nombre total d'essais : {{total}} ({{perSeries}} par série)",
@@ -51,6 +52,32 @@ const frTranslations = {
       },
       buttons: {
         start: "Commencer le test",
+      },
+      errors: {
+        usernameRequired: "Veuillez entrer un nom d'utilisateur",
+        usernameTaken: "Ce nom d'utilisateur est déjà pris",
+        checkingUsername: "Erreur lors de la vérification du nom d'utilisateur",
+        musicRequired: "Veuillez sélectionner la musique de fond",
+        musicError: "Erreur lors de la lecture de la musique, veuillez réessayer",
+        genderRequired: "Veuillez sélectionner votre genre"
+      },
+      alerts: {
+        tooManyErrors: "Le taux d'erreur est trop élevé, veuillez répondre aux questions attentivement. Le test va redémarrer.",
+      },
+      musicSelection: {
+        title: "Sélectionner la musique de fond",
+        mozart: "Mozart",
+        pop_music: "Musique Pop",
+        no_music: "Pas de musique"
+      },
+      gender: {
+        label: "Veuillez sélectionner votre genre",
+        male: "Homme",
+        female: "Femme"
+      },
+      username: {
+        title: "Veuillez entrer votre nom d'utilisateur",
+        placeholders: "Entrez votre nom d'utilisateur préféré",
       },
     },
   }
