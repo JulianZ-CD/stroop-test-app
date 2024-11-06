@@ -73,8 +73,11 @@ export function useStroopGame(userId: string) {
     responseTimes: [],
     selectedMusic: null,
     username: "",
+    gender: "",
   });
   const hasShownError = useRef(false);
+  const [selectedGender, setSelectedGender] = useState<string | null>(null);
+  const [genderError, setGenderError] = useState("");
 
   const handleMusicSelection = useCallback((music: MusicOption) => {
     if (audioRef.current) {
@@ -299,11 +302,30 @@ export function useStroopGame(userId: string) {
     [t, userId]
   );
 
+  const handleGenderSelect = (gender: string) => {
+    setSelectedGender(gender);
+    setGenderError("");
+  };
+
   const startTest = useCallback(async () => {
+    let hasError = false;
+
+    if (!username.trim()) {
+      setUsernameError(t("stroopTest.errors.usernameRequired"));
+      hasError = true;
+    }
+
+    if (!selectedGender) {
+      setGenderError(t("stroopTest.errors.genderRequired"));
+      hasError = true;
+    }
+
     if (!selectedMusic) {
       setMusicError(t("stroopTest.errors.musicRequired"));
-      return;
+      hasError = true;
     }
+
+    if (hasError) return;
 
     if (!(await validateUsername(username))) {
       return;
@@ -335,6 +357,7 @@ export function useStroopGame(userId: string) {
         responseTimes: [],
         selectedMusic,
         username,
+        gender: selectedGender!,
       });
     } catch (error) {
       console.error("Error starting test:", error);
@@ -356,5 +379,8 @@ export function useStroopGame(userId: string) {
     handleMusicSelection,
     startTest,
     validateUsername,
+    selectedGender,
+    genderError,
+    handleGenderSelect,
   };
 }

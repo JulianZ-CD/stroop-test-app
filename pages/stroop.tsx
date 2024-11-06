@@ -6,6 +6,7 @@ import { ColorButtons } from "@/components/stroop/ColorButtons";
 import { ResultsView } from "@/components/stroop/ResultsView";
 import { UsernameInput } from "@/components/stroop/UsernameInput";
 import { MusicSelection } from "@/components/stroop/MusicSelection";
+import { GenderSelection } from "@/components/stroop/GenderSelection";
 import { useStroopGame } from "@/hooks/useStroopGame";
 
 export const COLORS = {
@@ -57,6 +58,7 @@ export interface Results {
   responseTimes: number[];
   selectedMusic: MusicOption | null;
   username: string;
+  gender: string;
 }
 
 export default function StroopTest() {
@@ -78,6 +80,9 @@ export default function StroopTest() {
     setUsername,
     handleMusicSelection,
     startTest,
+    selectedGender,
+    genderError,
+    handleGenderSelect,
   } = useStroopGame(user.username);
 
   const getColorTranslationKey = (colorName: string): string =>
@@ -122,6 +127,12 @@ export default function StroopTest() {
               username={username}
               usernameError={usernameError}
               onUsernameChange={setUsername}
+            />
+
+            <GenderSelection
+              selectedGender={selectedGender}
+              genderError={genderError}
+              onGenderSelect={handleGenderSelect}
             />
 
             <MusicSelection

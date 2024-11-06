@@ -38,6 +38,7 @@ const enTranslations = {
       checkingUsername: "Error checking username availability",
       musicRequired: "Please select background music first",
       musicError: "Error playing music, please try again",
+      genderRequired: "Please select gender"
     },
     placeholders: {
       enterUsername: "Enter your preferred username",
@@ -73,6 +74,11 @@ const enTranslations = {
       pop_music: "Pop Music",
       no_music: "Don't play music",
     },
+    gender: {
+      label: "Please select your gender",
+      male: "Male",
+      female: "Female"
+    }
   },
 };
 

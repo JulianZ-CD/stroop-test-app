@@ -11,6 +11,7 @@ const schema = a.schema({
     .model({
       userId: a.string(),
       username: a.string(),
+      gender: a.string(),
       timestamp: a.string(),
       rightFirstSeries: a.integer(),
       rightSecondSeries: a.integer(),
