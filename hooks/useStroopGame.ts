@@ -37,6 +37,8 @@ interface StroopTestModel {
   averageResponseTimeFirstSeries: number;
   averageResponseTimeSecondSeries: number;
   selectedMusic: MusicOption | null;
+  avgResponseDelay: number;
+  testingTime: number;
 }
 
 export function useStroopGame(userId: string) {
@@ -101,6 +103,7 @@ export function useStroopGame(userId: string) {
 
   const saveResults = useCallback(async () => {
     try {
+      const totalTime = (Date.now() - startTime) / 1000; // Convert to seconds
       const testData: StroopTestModel = {
         userId,
         username: results.username,
@@ -113,26 +116,44 @@ export function useStroopGame(userId: string) {
           ((results.rightFirstSeries + results.rightSecondSeries) /
             (TRIALS_PER_SERIES * 2)) *
           100,
-        minTimeFirstSeries: results.minTimeFirstSeries,
-        minTimeSecondSeries: results.minTimeSecondSeries,
-        maxTimeFirstSeries: results.maxTimeFirstSeries,
-        maxTimeSecondSeries: results.maxTimeSecondSeries,
+        minTimeFirstSeries: Math.round(results.minTimeFirstSeries / 1000 * 100) / 100, // Convert to seconds with 2 decimal places
+        minTimeSecondSeries: Math.round(results.minTimeSecondSeries / 1000 * 100) / 100,
+        maxTimeFirstSeries: Math.round(results.maxTimeFirstSeries / 1000 * 100) / 100,
+        maxTimeSecondSeries: Math.round(results.maxTimeSecondSeries / 1000 * 100) / 100,
         averageResponseTimeFirstSeries:
-          results.responseTimes
-            .slice(0, TRIALS_PER_SERIES)
-            .reduce((a, b) => a + b, 0) / TRIALS_PER_SERIES,
+          Math.round(
+            (results.responseTimes
+              .slice(0, TRIALS_PER_SERIES)
+              .reduce((a, b) => a + b, 0) /
+              TRIALS_PER_SERIES /
+              1000) *
+              100
+          ) / 100,
         averageResponseTimeSecondSeries:
-          results.responseTimes
-            .slice(TRIALS_PER_SERIES)
-            .reduce((a, b) => a + b, 0) / TRIALS_PER_SERIES,
-        selectedMusic: results.selectedMusic,
+          Math.round(
+            (results.responseTimes
+              .slice(TRIALS_PER_SERIES)
+              .reduce((a, b) => a + b, 0) /
+              TRIALS_PER_SERIES /
+              1000) *
+              100
+          ) / 100,
+        avgResponseDelay:
+          Math.round(
+            (results.responseTimes.reduce((a, b) => a + b, 0) /
+              (TRIALS_PER_SERIES * 2) /
+              1000) *
+              100
+          ) / 100,
+        testingTime: Math.round(totalTime * 100) / 100,
+        selectedMusic: results.selectedMusic || "NO",
       };
 
       await client.models.StroopTest.create(testData);
     } catch (error) {
       console.error('Error saving results:', error);
     }
-  }, [userId, results]);
+  }, [userId, results, startTime]);
 
   const getNextIndex = useCallback(
     (currentIndex: number, excludeIndex: number): number => {
@@ -148,7 +169,8 @@ export function useStroopGame(userId: string) {
   const generateMatchedWord = useCallback(() => {
     const newWordIndex = getNextIndex(previousState.wordIndex, -1);
     const word = COLOR_NAMES[newWordIndex];
-    const color = Object.values(COLORS)[newWordIndex] as ColorValue;
+    // const color = Object.values(COLORS)[newWordIndex] as ColorValue;
+    const color = COLORS.BLACK;
 
     setPreviousState({
       wordIndex: newWordIndex,
