@@ -62,7 +62,7 @@ export default function App() {
         </button>
       </div>
 
-      <div className="todo-section">
+      {/* <div className="todo-section">
         <h2>{t("home.todoSection.title")}</h2>
         <button className="todo-button" onClick={createTodo}>
           {t("home.todoSection.newTodo")}
@@ -74,7 +74,7 @@ export default function App() {
             </li>
           ))}
         </ul>
-      </div>
+      </div> */}
 
       <div className="stroop-section">
         <h2>{t("home.stroopSection.title")}</h2>
