@@ -6,11 +6,7 @@ interface UsernameInputProps {
   onUsernameChange: (username: string) => void;
 }
 
-export function UsernameInput({
-                                username,
-                                usernameError,
-                                onUsernameChange,
-                              }: UsernameInputProps) {
+export function UsernameInput({ username, usernameError, onUsernameChange }: UsernameInputProps) {
   const { t } = useTranslation();
 
   return (

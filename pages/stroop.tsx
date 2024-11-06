@@ -1,12 +1,12 @@
-import {useAuthenticator} from "@aws-amplify/ui-react";
-import {useRouter} from "next/router";
-import {useTranslation} from "@/contexts/LanguageContext";
+import { useAuthenticator } from "@aws-amplify/ui-react";
+import { useRouter } from "next/router";
+import { useTranslation } from "@/contexts/LanguageContext";
 // import {useState} from 'react';
-import {ColorButtons} from '@/components/stroop/ColorButtons';
-import {ResultsView} from '@/components/stroop/ResultsView';
-import {UsernameInput} from '@/components/stroop/UsernameInput';
-import {MusicSelection} from '@/components/stroop/MusicSelection';
-import {useStroopGame} from '@/hooks/useStroopGame';
+import { ColorButtons } from "@/components/stroop/ColorButtons";
+import { ResultsView } from "@/components/stroop/ResultsView";
+import { UsernameInput } from "@/components/stroop/UsernameInput";
+import { MusicSelection } from "@/components/stroop/MusicSelection";
+import { useStroopGame } from "@/hooks/useStroopGame";
 
 export const COLORS = {
   RED: "#ff0000",
@@ -22,16 +22,16 @@ export const TRIALS_PER_SERIES = 10;
 export const MUSIC_OPTIONS = {
   MOZART: {
     name: "Mozart",
-    url: "/music/(KV 488) Piano Concerto n° 23_compressed.mp3"
+    url: "/music/(KV 488) Piano Concerto n° 23_compressed.mp3",
   },
   POP: {
     name: "Pop_Music",
-    url: "/music/Lead Me On.mp3"
+    url: "/music/Lead Me On.mp3",
   },
   NO: {
     name: "No_Music",
-    url: null
-  }
+    url: null,
+  },
 } as const;
 
 export type ColorValue = (typeof COLORS)[keyof typeof COLORS];
@@ -59,9 +59,9 @@ export interface Results {
 }
 
 export default function StroopTest() {
-  const {user} = useAuthenticator();
+  const { user } = useAuthenticator();
   const router = useRouter();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const {
     testState,
@@ -105,11 +105,11 @@ export default function StroopTest() {
           <div className="result-container">
             <p className="instructions">
               {t("stroopTest.instructions.part1")}
-              <br/>
+              <br />
               {t("stroopTest.instructions.part2")}
-              <br/>
+              <br />
               {t("stroopTest.instructions.part3")}
-              <br/>
+              <br />
               {t("stroopTest.instructions.totalTrials", {
                 total: TRIALS_PER_SERIES * 2,
                 perSeries: TRIALS_PER_SERIES,
@@ -131,7 +131,7 @@ export default function StroopTest() {
             <div className="navigation-buttons">
               <button
                 onClick={startTest}
-                className={(!selectedMusic || !username.trim()) ? 'disabled' : ''}
+                className={!selectedMusic || !username.trim() ? "disabled" : ""}
                 disabled={!selectedMusic || !username.trim()}
               >
                 {t("stroopTest.buttons.start")}
@@ -139,7 +139,6 @@ export default function StroopTest() {
               <button className="home-button" onClick={() => router.push("/")}>
                 {t("common.backToHome")}
               </button>
-
             </div>
           </div>
         </div>
@@ -164,10 +163,7 @@ export default function StroopTest() {
           })}
         </div>
 
-        <div
-          className="stroop-word"
-          style={{color: currentWord.textColor}}
-        >
+        <div className="stroop-word" style={{ color: currentWord.textColor }}>
           {t(getColorTranslationKey(currentWord.word))}
         </div>
 

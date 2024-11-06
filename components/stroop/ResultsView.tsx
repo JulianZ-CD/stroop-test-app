@@ -10,11 +10,11 @@ interface ResultsViewProps {
 }
 
 export function ResultsView({
-                              results,
-                              startTime,
-                              onStartNewTest,
-                              onBackToHome,
-                            }: ResultsViewProps) {
+  results,
+  startTime,
+  onStartNewTest,
+  onBackToHome,
+}: ResultsViewProps) {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -35,19 +35,16 @@ export function ResultsView({
             {t("stroopTest.results.mistakes")}: {results.mistakesFirstSeries}
           </div>
           <div>
-            {t("stroopTest.results.minResponseTime")}:{" "}
-            {formatTime(results.minTimeFirstSeries)}
+            {t("stroopTest.results.minResponseTime")}: {formatTime(results.minTimeFirstSeries)}
           </div>
           <div>
-            {t("stroopTest.results.maxResponseTime")}:{" "}
-            {formatTime(results.maxTimeFirstSeries)}
+            {t("stroopTest.results.maxResponseTime")}: {formatTime(results.maxTimeFirstSeries)}
           </div>
           <div>
             {t("stroopTest.results.avgResponseTime")}:{" "}
             {formatTime(
-              results.responseTimes
-                .slice(0, TRIALS_PER_SERIES)
-                .reduce((a, b) => a + b, 0) / TRIALS_PER_SERIES
+              results.responseTimes.slice(0, TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
+                TRIALS_PER_SERIES
             )}
           </div>
         </div>
@@ -61,19 +58,16 @@ export function ResultsView({
             {t("stroopTest.results.mistakes")}: {results.mistakesSecondSeries}
           </div>
           <div>
-            {t("stroopTest.results.minResponseTime")}:{" "}
-            {formatTime(results.minTimeSecondSeries)}
+            {t("stroopTest.results.minResponseTime")}: {formatTime(results.minTimeSecondSeries)}
           </div>
           <div>
-            {t("stroopTest.results.maxResponseTime")}:{" "}
-            {formatTime(results.maxTimeSecondSeries)}
+            {t("stroopTest.results.maxResponseTime")}: {formatTime(results.maxTimeSecondSeries)}
           </div>
           <div>
             {t("stroopTest.results.avgResponseTime")}:{" "}
             {formatTime(
-              results.responseTimes
-                .slice(TRIALS_PER_SERIES)
-                .reduce((a, b) => a + b, 0) / TRIALS_PER_SERIES
+              results.responseTimes.slice(TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
+                TRIALS_PER_SERIES
             )}
           </div>
         </div>
@@ -83,22 +77,17 @@ export function ResultsView({
           <div>
             {t("stroopTest.results.totalAccuracy")}:{" "}
             {(
-              ((results.rightFirstSeries + results.rightSecondSeries) /
-                (TRIALS_PER_SERIES * 2)) *
+              ((results.rightFirstSeries + results.rightSecondSeries) / (TRIALS_PER_SERIES * 2)) *
               100
             ).toFixed(1)}
             %
           </div>
           <div>
             {t("stroopTest.results.avgResponseTime")}:{" "}
-            {formatTime(
-              results.responseTimes.reduce((a, b) => a + b, 0) /
-              (TRIALS_PER_SERIES * 2)
-            )}
+            {formatTime(results.responseTimes.reduce((a, b) => a + b, 0) / (TRIALS_PER_SERIES * 2))}
           </div>
           <div>
-            {t("stroopTest.results.totalTestingTime")}:{" "}
-            {formatTime(Date.now() - startTime)}
+            {t("stroopTest.results.totalTestingTime")}: {formatTime(Date.now() - startTime)}
           </div>
         </div>
       </div>

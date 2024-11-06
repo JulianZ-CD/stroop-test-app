@@ -1,7 +1,7 @@
-import {useState, useCallback, useRef, useEffect} from "react";
-import {generateClient} from "aws-amplify/data";
-import type {Schema} from "@/amplify/data/resource";
-import {useTranslation} from "@/contexts/LanguageContext";
+import { useState, useCallback, useRef, useEffect } from "react";
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "@/amplify/data/resource";
+import { useTranslation } from "@/contexts/LanguageContext";
 import {
   Word,
   Results,
@@ -12,7 +12,6 @@ import {
   COLORS,
   MUSIC_OPTIONS,
 } from "@/pages/stroop";
-import {Alert} from "@aws-amplify/ui-react";
 
 const client = generateClient<Schema>();
 
@@ -43,10 +42,8 @@ interface StroopTestModel {
 
 export function useStroopGame(userId: string) {
   // State declarations
-  const [testState, setTestState] = useState<
-    "idle" | "first" | "second" | "completed"
-  >("idle");
-  const {t} = useTranslation();
+  const [testState, setTestState] = useState<"idle" | "first" | "second" | "completed">("idle");
+  const { t } = useTranslation();
   const [selectedMusic, setSelectedMusic] = useState<MusicOption | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [username, setUsername] = useState("");
@@ -76,7 +73,6 @@ export function useStroopGame(userId: string) {
     username: "",
   });
 
-  // 添加音乐选择处理函数
   const handleMusicSelection = useCallback((music: MusicOption) => {
     if (audioRef.current) {
       audioRef.current.pause();
@@ -85,7 +81,6 @@ export function useStroopGame(userId: string) {
     setSelectedMusic(music);
   }, []);
 
-  // 音乐效果处理
   useEffect(() => {
     if (selectedMusic && MUSIC_OPTIONS[selectedMusic].url) {
       const audio = new Audio(MUSIC_OPTIONS[selectedMusic].url);
@@ -113,36 +108,28 @@ export function useStroopGame(userId: string) {
         mistakesFirstSeries: results.mistakesFirstSeries,
         mistakesSecondSeries: results.mistakesSecondSeries,
         averageResponsePercent:
-          ((results.rightFirstSeries + results.rightSecondSeries) /
-            (TRIALS_PER_SERIES * 2)) *
-          100,
-        minTimeFirstSeries: Math.round(results.minTimeFirstSeries / 1000 * 100) / 100, // Convert to seconds with 2 decimal places
-        minTimeSecondSeries: Math.round(results.minTimeSecondSeries / 1000 * 100) / 100,
-        maxTimeFirstSeries: Math.round(results.maxTimeFirstSeries / 1000 * 100) / 100,
-        maxTimeSecondSeries: Math.round(results.maxTimeSecondSeries / 1000 * 100) / 100,
+          ((results.rightFirstSeries + results.rightSecondSeries) / (TRIALS_PER_SERIES * 2)) * 100,
+        minTimeFirstSeries: Math.round((results.minTimeFirstSeries / 1000) * 100) / 100, // Convert to seconds with 2 decimal places
+        minTimeSecondSeries: Math.round((results.minTimeSecondSeries / 1000) * 100) / 100,
+        maxTimeFirstSeries: Math.round((results.maxTimeFirstSeries / 1000) * 100) / 100,
+        maxTimeSecondSeries: Math.round((results.maxTimeSecondSeries / 1000) * 100) / 100,
         averageResponseTimeFirstSeries:
           Math.round(
-            (results.responseTimes
-              .slice(0, TRIALS_PER_SERIES)
-              .reduce((a, b) => a + b, 0) /
+            (results.responseTimes.slice(0, TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
               TRIALS_PER_SERIES /
               1000) *
               100
           ) / 100,
         averageResponseTimeSecondSeries:
           Math.round(
-            (results.responseTimes
-              .slice(TRIALS_PER_SERIES)
-              .reduce((a, b) => a + b, 0) /
+            (results.responseTimes.slice(TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
               TRIALS_PER_SERIES /
               1000) *
               100
           ) / 100,
         avgResponseDelay:
           Math.round(
-            (results.responseTimes.reduce((a, b) => a + b, 0) /
-              (TRIALS_PER_SERIES * 2) /
-              1000) *
+            (results.responseTimes.reduce((a, b) => a + b, 0) / (TRIALS_PER_SERIES * 2) / 1000) *
               100
           ) / 100,
         testingTime: Math.round(totalTime * 100) / 100,
@@ -151,20 +138,16 @@ export function useStroopGame(userId: string) {
 
       await client.models.StroopTest.create(testData);
     } catch (error) {
-      console.error('Error saving results:', error);
+      console.error("Error saving results:", error);
     }
   }, [userId, results, startTime]);
 
-  const getNextIndex = useCallback(
-    (currentIndex: number, excludeIndex: number): number => {
-      const possibleIndices = Array.from(
-        {length: COLOR_NAMES.length},
-        (_, i) => i
-      ).filter((i) => i !== currentIndex && i !== excludeIndex);
-      return possibleIndices[Math.floor(Math.random() * possibleIndices.length)];
-    },
-    []
-  );
+  const getNextIndex = useCallback((currentIndex: number, excludeIndex: number): number => {
+    const possibleIndices = Array.from({ length: COLOR_NAMES.length }, (_, i) => i).filter(
+      (i) => i !== currentIndex && i !== excludeIndex
+    );
+    return possibleIndices[Math.floor(Math.random() * possibleIndices.length)];
+  }, []);
 
   const generateMatchedWord = useCallback(() => {
     const newWordIndex = getNextIndex(previousState.wordIndex, -1);
@@ -211,31 +194,19 @@ export function useStroopGame(userId: string) {
       const newTrialCount = trialCount + 1;
 
       setResults((prev) => {
-        const newResults = {...prev};
+        const newResults = { ...prev };
         newResults.responseTimes.push(responseTime);
 
         if (testState === "first") {
           if (isCorrect) newResults.rightFirstSeries++;
           else newResults.mistakesFirstSeries++;
-          newResults.minTimeFirstSeries = Math.min(
-            newResults.minTimeFirstSeries,
-            responseTime
-          );
-          newResults.maxTimeFirstSeries = Math.max(
-            newResults.maxTimeFirstSeries,
-            responseTime
-          );
+          newResults.minTimeFirstSeries = Math.min(newResults.minTimeFirstSeries, responseTime);
+          newResults.maxTimeFirstSeries = Math.max(newResults.maxTimeFirstSeries, responseTime);
         } else {
           if (isCorrect) newResults.rightSecondSeries++;
           else newResults.mistakesSecondSeries++;
-          newResults.minTimeSecondSeries = Math.min(
-            newResults.minTimeSecondSeries,
-            responseTime
-          );
-          newResults.maxTimeSecondSeries = Math.max(
-            newResults.maxTimeSecondSeries,
-            responseTime
-          );
+          newResults.minTimeSecondSeries = Math.min(newResults.minTimeSecondSeries, responseTime);
+          newResults.maxTimeSecondSeries = Math.max(newResults.maxTimeSecondSeries, responseTime);
         }
 
         return newResults;
@@ -244,17 +215,14 @@ export function useStroopGame(userId: string) {
       let nextWord;
       if (newTrialCount === TRIALS_PER_SERIES) {
         setTestState("second");
-        setPreviousState({wordIndex: -1, colorIndex: -1});
+        setPreviousState({ wordIndex: -1, colorIndex: -1 });
         nextWord = generateMismatchedWord();
       } else if (newTrialCount === TRIALS_PER_SERIES * 2) {
         setTestState("completed");
         await saveResults();
         return;
       } else {
-        nextWord =
-          testState === "first"
-            ? generateMatchedWord()
-            : generateMismatchedWord();
+        nextWord = testState === "first" ? generateMatchedWord() : generateMismatchedWord();
       }
 
       setCurrentWord(nextWord);
