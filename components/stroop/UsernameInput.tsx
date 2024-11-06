@@ -14,12 +14,13 @@ export function UsernameInput({ username, usernameError, onUsernameChange }: Use
       <label htmlFor="username" className="username-label">
         {t("common.greetings")}
       </label>
+      <h3 className="title">{t("stroopTest.username.title")}</h3>
       <input
         id="username"
         type="text"
         value={username}
         onChange={(e) => onUsernameChange(e.target.value)}
-        placeholder={t("stroopTest.placeholders.enterUsername")}
+        placeholder={t("stroopTest.username.placeholders")}
         className="input"
         maxLength={50}
       />

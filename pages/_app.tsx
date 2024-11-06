@@ -18,7 +18,7 @@ function AppContent({ Component, pageProps }: AppProps) {
       <Head>
         <title>{t("home.title")}</title>
       </Head>
-      <h1>{t("home.title")} - SYDE</h1>
+      <h1>{t("home.title")} - SYDE640</h1>
       <Authenticator>
         <Component {...pageProps} />
       </Authenticator>

@@ -61,9 +61,6 @@ const cnTranslations = {
       musicError: "播放音乐时出错，请重试",
       genderRequired: "请选择性别"
     },
-    placeholders: {
-      enterUsername: "请输入您的首选用户名",
-    },
     alerts: {
       tooManyErrors: "错误率过高，请认真回答问题。测试将重新开始。",
     },
@@ -77,7 +74,11 @@ const cnTranslations = {
       label: "请选择您的性别",
       male: "男",
       female: "女"
-    }
+    },
+    username: {
+      title: "请输入用户名",
+      placeholders: "请输入您的昵称",
+    },
   },
 };
 

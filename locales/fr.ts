@@ -61,9 +61,6 @@ const frTranslations = {
         musicError: "Erreur lors de la lecture de la musique, veuillez réessayer",
         genderRequired: "Veuillez sélectionner votre genre"
       },
-      placeholders: {
-        enterUsername: "Entrez votre nom d'utilisateur préféré",
-      },
       alerts: {
         tooManyErrors: "Le taux d'erreur est trop élevé, veuillez répondre aux questions attentivement. Le test va redémarrer.",
       },
@@ -77,7 +74,11 @@ const frTranslations = {
         label: "Veuillez sélectionner votre genre",
         male: "Homme",
         female: "Femme"
-      }
+      },
+      username: {
+        title: "Veuillez entrer votre nom d'utilisateur",
+        placeholders: "Entrez votre nom d'utilisateur préféré",
+      },
     },
   }
 

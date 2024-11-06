@@ -40,9 +40,6 @@ const enTranslations = {
       musicError: "Error playing music, please try again",
       genderRequired: "Please select gender"
     },
-    placeholders: {
-      enterUsername: "Enter your preferred username",
-    },
     progress: {
       practiceRound: "Practice Round",
       testRound: "Test Round",
@@ -67,6 +64,10 @@ const enTranslations = {
     },
     buttons: {
       start: "Start Test",
+    },
+    username: {
+      title: "Please enter your username",
+      placeholders: "Enter your preferred username",
     },
     musicSelection: {
       title: "Select Background Music",
