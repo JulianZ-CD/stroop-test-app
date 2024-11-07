@@ -21,8 +21,8 @@ const cnTranslations = {
     title: "斯特鲁普测试",
     instructions: {
       part1: "在第一轮（练习轮）中，所有单词都显示为黑色。",
-      part2: "在第二轮（测试轮）中，颜色将与单词不同。",
-      part3: "请始终点击与单词含义相匹配的颜色。",
+      part2: "在第二轮（测试轮）中，文字的颜色将与写出的颜色名称不匹配。请选择与文字颜色相匹配的色块。",
+      part3: "例如，如果你看到蓝色字体的\"红色\"，请选择\"蓝色\"色块，因为文字的颜色是蓝色。",
       totalTrials: "总试验次数：{{total}}（每轮{{perSeries}}次）",
     },
     colors: {
@@ -52,6 +52,7 @@ const cnTranslations = {
     },
     buttons: {
       start: "开始测试",
+      continue: "继续测试",
     },
     errors: {
       usernameRequired: "请输入用户名",
@@ -81,11 +82,17 @@ const cnTranslations = {
     },
     firstPhase: {
       title: "第一阶段 - 练习轮",
-      instructions: "在这个阶段，所有单词都将以黑色显示。请点击与单词含义相匹配的颜色按钮。",
+      instructions: `
+        在第一轮中，所有颜色词都以黑色字体显示。请选择与写出的颜色名称相匹配的色块。<br/><br/>
+        例如，如果你看到"<span style="color: black; font-weight: bold">黄色</span>"，请选择"黄色"色块。
+      `
     },
     secondPhase: {
       title: "第二阶段 - 测试轮",
-      instructions: "在这个阶段，单词将以不同的颜色显示。仍然要点击与单词含义相匹配的颜色按钮，而不是显示的颜色。",
+      instructions: `
+        在第二轮中，文字的颜色将与写出的颜色名称不匹配。请选择与文字颜色相匹配的色块。<br/><br/>
+        例如，如果你看到<span style="color: blue">红色</span>，请选择"蓝色"色块，因为文字的颜色是蓝色。
+      `
     },
   },
 };
