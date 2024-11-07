@@ -104,52 +104,63 @@ export function useStroopGame(userId: string) {
     };
   }, [selectedMusic]);
 
-  const saveResults = useCallback(async () => {
-    try {
-      const totalTime = (Date.now() - startTime) / 1000; // Convert to seconds
-      const testData: StroopTestModel = {
-        userId,
-        username: results.username,
-        gender: results.gender,
-        timestamp: new Date().toISOString(),
-        rightFirstSeries: results.rightFirstSeries,
-        rightSecondSeries: results.rightSecondSeries,
-        mistakesFirstSeries: results.mistakesFirstSeries,
-        mistakesSecondSeries: results.mistakesSecondSeries,
-        averageResponsePercent:
-          ((results.rightFirstSeries + results.rightSecondSeries) / (TRIALS_PER_SERIES * 2)) * 100,
-        minTimeFirstSeries: Math.round((results.minTimeFirstSeries / 1000) * 100) / 100, // Convert to seconds with 2 decimal places
-        minTimeSecondSeries: Math.round((results.minTimeSecondSeries / 1000) * 100) / 100,
-        maxTimeFirstSeries: Math.round((results.maxTimeFirstSeries / 1000) * 100) / 100,
-        maxTimeSecondSeries: Math.round((results.maxTimeSecondSeries / 1000) * 100) / 100,
-        averageResponseTimeFirstSeries:
-          Math.round(
-            (results.responseTimes.slice(0, TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
-              TRIALS_PER_SERIES /
-              1000) *
-              100
-          ) / 100,
-        averageResponseTimeSecondSeries:
-          Math.round(
-            (results.responseTimes.slice(TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
-              TRIALS_PER_SERIES /
-              1000) *
-              100
-          ) / 100,
-        avgResponseDelay:
-          Math.round(
-            (results.responseTimes.reduce((a, b) => a + b, 0) / (TRIALS_PER_SERIES * 2) / 1000) *
-              100
-          ) / 100,
-        testingTime: Math.round(totalTime * 100) / 100,
-        selectedMusic: results.selectedMusic || "NO",
-      };
+  const saveResults = useCallback(
+    async (latestResults: Results) => {
+      console.log("=== Save Results Debug ===", {
+        resultsBeforeSave: latestResults,
+      });
 
-      await client.models.StroopTest.create(testData);
-    } catch (error) {
-      console.error("Error saving results:", error);
-    }
-  }, [userId, results, startTime]);
+      try {
+        const totalTime = (Date.now() - startTime) / 1000; // Convert to seconds
+        const testData: StroopTestModel = {
+          userId,
+          username: latestResults.username,
+          gender: latestResults.gender,
+          timestamp: new Date().toISOString(),
+          rightFirstSeries: latestResults.rightFirstSeries,
+          rightSecondSeries: latestResults.rightSecondSeries,
+          mistakesFirstSeries: latestResults.mistakesFirstSeries,
+          mistakesSecondSeries: latestResults.mistakesSecondSeries,
+          averageResponsePercent:
+            ((latestResults.rightFirstSeries + latestResults.rightSecondSeries) /
+              (TRIALS_PER_SERIES * 2)) *
+            100,
+          minTimeFirstSeries: Math.round((latestResults.minTimeFirstSeries / 1000) * 100) / 100, // Convert to seconds with 2 decimal places
+          minTimeSecondSeries: Math.round((latestResults.minTimeSecondSeries / 1000) * 100) / 100,
+          maxTimeFirstSeries: Math.round((latestResults.maxTimeFirstSeries / 1000) * 100) / 100,
+          maxTimeSecondSeries: Math.round((latestResults.maxTimeSecondSeries / 1000) * 100) / 100,
+          averageResponseTimeFirstSeries:
+            Math.round(
+              (latestResults.responseTimes.slice(0, TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
+                TRIALS_PER_SERIES /
+                1000) *
+                100
+            ) / 100,
+          averageResponseTimeSecondSeries:
+            Math.round(
+              (latestResults.responseTimes.slice(TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
+                TRIALS_PER_SERIES /
+                1000) *
+                100
+            ) / 100,
+          avgResponseDelay:
+            Math.round(
+              (latestResults.responseTimes.reduce((a, b) => a + b, 0) /
+                (TRIALS_PER_SERIES * 2) /
+                1000) *
+                100
+            ) / 100,
+          testingTime: Math.round(totalTime * 100) / 100,
+          selectedMusic: latestResults.selectedMusic || "NO",
+        };
+
+        await client.models.StroopTest.create(testData);
+      } catch (error) {
+        console.error("Error saving results:", error);
+      }
+    },
+    [userId, results, startTime]
+  );
 
   const getNextIndex = useCallback((currentIndex: number, excludeIndex: number): number => {
     const possibleIndices = Array.from({ length: COLOR_NAMES.length }, (_, i) => i).filter(
@@ -200,40 +211,57 @@ export function useStroopGame(userId: string) {
       const responseTime = Date.now() - startTime;
       const isCorrect = selectedColor === currentWord.correctColor;
       const newTrialCount = trialCount + 1;
+      let updatedResults = { ...results };
 
-      setResults((prev) => {
-        const newResults = { ...prev };
-        newResults.responseTimes.push(responseTime);
+      await new Promise<void>((resolve) => {
+        setResults((prev) => {
+          const newResults = { ...prev };
+          newResults.responseTimes.push(responseTime);
 
-        if (testState === "first") {
-          if (isCorrect) newResults.rightFirstSeries++;
-          else newResults.mistakesFirstSeries++;
+          if (testState === "first") {
+            if (isCorrect) newResults.rightFirstSeries++;
+            else newResults.mistakesFirstSeries++;
 
-          if (newResults.mistakesFirstSeries >= MAX_MISTAKES_ALLOWED && !hasShownError.current) {
-            hasShownError.current = true;
-            alert(t("stroopTest.alerts.tooManyErrors"));
-            window.location.reload();
-            return prev;
+            if (newResults.mistakesFirstSeries >= MAX_MISTAKES_ALLOWED && !hasShownError.current) {
+              hasShownError.current = true;
+              alert(t("stroopTest.alerts.tooManyErrors"));
+              window.location.reload();
+              return prev;
+            }
+
+            newResults.minTimeFirstSeries = Math.min(newResults.minTimeFirstSeries, responseTime);
+            newResults.maxTimeFirstSeries = Math.max(newResults.maxTimeFirstSeries, responseTime);
+          } else {
+            if (isCorrect) {
+              newResults.rightSecondSeries++;
+            } else newResults.mistakesSecondSeries++;
+
+            if (newResults.mistakesSecondSeries >= MAX_MISTAKES_ALLOWED && !hasShownError.current) {
+              hasShownError.current = true;
+              alert(t("stroopTest.alerts.tooManyErrors"));
+              window.location.reload();
+              return prev;
+            }
+            newResults.minTimeSecondSeries = Math.min(newResults.minTimeSecondSeries, responseTime);
+            newResults.maxTimeSecondSeries = Math.max(newResults.maxTimeSecondSeries, responseTime);
           }
 
-          newResults.minTimeFirstSeries = Math.min(newResults.minTimeFirstSeries, responseTime);
-          newResults.maxTimeFirstSeries = Math.max(newResults.maxTimeFirstSeries, responseTime);
-        } else {
-          if (isCorrect) newResults.rightSecondSeries++;
-          else newResults.mistakesSecondSeries++;
-
-          if (newResults.mistakesSecondSeries >= MAX_MISTAKES_ALLOWED && !hasShownError.current) {
-            hasShownError.current = true;
-            alert(t("stroopTest.alerts.tooManyErrors"));
-            window.location.reload();
-            return prev;
-          }
-          newResults.minTimeSecondSeries = Math.min(newResults.minTimeSecondSeries, responseTime);
-          newResults.maxTimeSecondSeries = Math.max(newResults.maxTimeSecondSeries, responseTime);
-        }
-
-        return newResults;
+          updatedResults = newResults;
+          setTimeout(() => resolve(), 0);
+          return newResults;
+        });
       });
+
+      if (newTrialCount === TRIALS_PER_SERIES * 2) {
+        console.log("=== Final Results Debug ===", {
+          totalTrials: newTrialCount,
+          rightSecondSeries: updatedResults.rightSecondSeries,
+          resultsBeforeSave: updatedResults,
+        });
+        setTestState("completed");
+        await saveResults(updatedResults);
+        return;
+      }
 
       let nextWord;
       if (newTrialCount === TRIALS_PER_SERIES) {
@@ -241,8 +269,13 @@ export function useStroopGame(userId: string) {
         setPreviousState({ wordIndex: -1, colorIndex: -1 });
         nextWord = generateMismatchedWord();
       } else if (newTrialCount === TRIALS_PER_SERIES * 2) {
+        console.log("=== Final Results Debug ===", {
+          totalTrials: newTrialCount,
+          rightSecondSeries: updatedResults.rightSecondSeries,
+          resultsBeforeSave: updatedResults,
+        });
         setTestState("completed");
-        await saveResults();
+        await saveResults(updatedResults);
         return;
       } else {
         nextWord = testState === "first" ? generateMatchedWord() : generateMismatchedWord();
@@ -310,7 +343,6 @@ export function useStroopGame(userId: string) {
   };
 
   const startTest = useCallback(async () => {
-
     let hasError = false;
 
     if (!username.trim()) {
