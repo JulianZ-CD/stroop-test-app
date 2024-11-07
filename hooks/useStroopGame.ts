@@ -39,6 +39,7 @@ interface StroopTestModel {
   selectedMusic: MusicOption | null;
   avgResponseDelay: number;
   testingTime: number;
+  gender: string;
 }
 
 export function useStroopGame(userId: string) {
@@ -109,6 +110,7 @@ export function useStroopGame(userId: string) {
       const testData: StroopTestModel = {
         userId,
         username: results.username,
+        gender: results.gender,
         timestamp: new Date().toISOString(),
         rightFirstSeries: results.rightFirstSeries,
         rightSecondSeries: results.rightSecondSeries,
@@ -220,7 +222,7 @@ export function useStroopGame(userId: string) {
           if (isCorrect) newResults.rightSecondSeries++;
           else newResults.mistakesSecondSeries++;
 
-          if (newResults.mistakesFirstSeries >= MAX_MISTAKES_ALLOWED && !hasShownError.current) {
+          if (newResults.mistakesSecondSeries >= MAX_MISTAKES_ALLOWED && !hasShownError.current) {
             hasShownError.current = true;
             alert(t("stroopTest.alerts.tooManyErrors"));
             window.location.reload();
