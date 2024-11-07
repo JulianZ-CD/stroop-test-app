@@ -56,7 +56,9 @@ export interface Results {
   maxTimeFirstSeries: number;
   maxTimeSecondSeries: number;
   responseTimes: number[];
-  testingTime: number;
+  firstTestTotalTime: number;
+  secondTestTotalTime: number;
+  allTestTotalTime: number;
   selectedMusic: MusicOption | null;
   username: string;
   gender: string;
@@ -84,6 +86,7 @@ export default function StroopTest() {
     selectedGender,
     genderError,
     handleGenderSelect,
+    startActualTest,
   } = useStroopGame(user.username);
 
   const getColorTranslationKey = (colorName: string): string =>
@@ -159,6 +162,30 @@ export default function StroopTest() {
     );
   }
 
+  if (testState === "first-intro") {
+    return (
+      <div>
+        <h2>{t("stroopTest.firstPhase.title")}</h2>
+        <p>{t("stroopTest.firstPhase.instructions")}</p>
+        <button onClick={() => startActualTest("first")}>
+          {t("stroopTest.start")}
+        </button>
+      </div>
+    );
+  }
+
+  if (testState === "second-intro") {
+    return (
+      <div>
+        <h2>{t("stroopTest.secondPhase.title")}</h2>
+        <p>{t("stroopTest.secondPhase.instructions")}</p>
+        <button onClick={() => startActualTest("second")}>
+          {t("stroopTest.continue")}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <main>
       <div className="stroop-container">
@@ -171,7 +198,7 @@ export default function StroopTest() {
           )}
           :{" "}
           {t("stroopTest.progress.trial", {
-            current: (trialCount % TRIALS_PER_SERIES) + 1,
+            current: trialCount + 1,
             total: TRIALS_PER_SERIES,
           })}
         </div>
