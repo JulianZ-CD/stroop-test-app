@@ -38,8 +38,10 @@ interface StroopTestModel {
   averageResponseTimeSecondSeries: number;
   selectedMusic: MusicOption | null;
   avgResponseDelay: number;
-  testingTime: number;
   gender: string;
+  firstTestTotalTime: number;
+  secondTestTotalTime: number;
+  allTestTotalTime: number;
 }
 
 export function useStroopGame(userId: string) {
@@ -130,33 +132,32 @@ export function useStroopGame(userId: string) {
             ((latestResults.rightFirstSeries + latestResults.rightSecondSeries) /
               (TRIALS_PER_SERIES * 2)) *
             100,
-          minTimeFirstSeries: Math.round((latestResults.minTimeFirstSeries / 1000) * 100) / 100, // Convert to seconds with 2 decimal places
+          minTimeFirstSeries: Math.round((latestResults.minTimeFirstSeries / 1000) * 100) / 100,
           minTimeSecondSeries: Math.round((latestResults.minTimeSecondSeries / 1000) * 100) / 100,
           maxTimeFirstSeries: Math.round((latestResults.maxTimeFirstSeries / 1000) * 100) / 100,
           maxTimeSecondSeries: Math.round((latestResults.maxTimeSecondSeries / 1000) * 100) / 100,
-          averageResponseTimeFirstSeries:
-            Math.round(
-              (latestResults.responseTimes.slice(0, TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
-                TRIALS_PER_SERIES /
-                1000) *
-                100
-            ) / 100,
-          averageResponseTimeSecondSeries:
-            Math.round(
-              (latestResults.responseTimes.slice(TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
-                TRIALS_PER_SERIES /
-                1000) *
-                100
-            ) / 100,
-          avgResponseDelay:
-            Math.round(
-              (latestResults.responseTimes.reduce((a, b) => a + b, 0) /
-                (TRIALS_PER_SERIES * 2) /
-                1000) *
-                100
-            ) / 100,
-          testingTime: latestResults.allTestTotalTime,
+          averageResponseTimeFirstSeries: Math.round(
+            (latestResults.responseTimes.slice(0, TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
+              TRIALS_PER_SERIES /
+              1000) *
+              100
+          ) / 100,
+          averageResponseTimeSecondSeries: Math.round(
+            (latestResults.responseTimes.slice(TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
+              TRIALS_PER_SERIES /
+              1000) *
+              100
+          ) / 100,
+          avgResponseDelay: Math.round(
+            (latestResults.responseTimes.reduce((a, b) => a + b, 0) /
+              (TRIALS_PER_SERIES * 2) /
+              1000) *
+              100
+          ) / 100,
           selectedMusic: latestResults.selectedMusic || "NO",
+          firstTestTotalTime: latestResults.firstTestTotalTime,
+          secondTestTotalTime: latestResults.secondTestTotalTime,
+          allTestTotalTime: latestResults.allTestTotalTime,
         };
 
         await client.models.StroopTest.create(testData);
