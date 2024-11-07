@@ -87,7 +87,7 @@ export function ResultsView({
             {formatTime(results.responseTimes.reduce((a, b) => a + b, 0) / (TRIALS_PER_SERIES * 2))}
           </div>
           <div>
-            {t("stroopTest.results.totalTestingTime")}: {formatTime(Date.now() - startTime)}
+            {t("stroopTest.results.totalTestingTime")}: {results.testingTime.toFixed(2)}s
           </div>
         </div>
       </div>

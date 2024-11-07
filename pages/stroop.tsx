@@ -56,6 +56,7 @@ export interface Results {
   maxTimeFirstSeries: number;
   maxTimeSecondSeries: number;
   responseTimes: number[];
+  testingTime: number;
   selectedMusic: MusicOption | null;
   username: string;
   gender: string;

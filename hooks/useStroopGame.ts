@@ -71,6 +71,7 @@ export function useStroopGame(userId: string) {
     minTimeSecondSeries: Number.MAX_VALUE,
     maxTimeFirstSeries: 0,
     maxTimeSecondSeries: 0,
+    testingTime: 0,
     responseTimes: [],
     selectedMusic: null,
     username: "",
@@ -79,6 +80,7 @@ export function useStroopGame(userId: string) {
   const hasShownError = useRef(false);
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
   const [genderError, setGenderError] = useState("");
+  const [testStartTime, setTestStartTime] = useState(0);
 
   const handleMusicSelection = useCallback((music: MusicOption) => {
     if (audioRef.current) {
@@ -106,12 +108,7 @@ export function useStroopGame(userId: string) {
 
   const saveResults = useCallback(
     async (latestResults: Results) => {
-      console.log("=== Save Results Debug ===", {
-        resultsBeforeSave: latestResults,
-      });
-
       try {
-        const totalTime = (Date.now() - startTime) / 1000; // Convert to seconds
         const testData: StroopTestModel = {
           userId,
           username: latestResults.username,
@@ -150,7 +147,7 @@ export function useStroopGame(userId: string) {
                 1000) *
                 100
             ) / 100,
-          testingTime: Math.round(totalTime * 100) / 100,
+          testingTime: latestResults.testingTime,
           selectedMusic: latestResults.selectedMusic || "NO",
         };
 
@@ -159,7 +156,7 @@ export function useStroopGame(userId: string) {
         console.error("Error saving results:", error);
       }
     },
-    [userId, results, startTime]
+    [userId, testStartTime]
   );
 
   const getNextIndex = useCallback((currentIndex: number, excludeIndex: number): number => {
@@ -253,13 +250,19 @@ export function useStroopGame(userId: string) {
       });
 
       if (newTrialCount === TRIALS_PER_SERIES * 2) {
-        console.log("=== Final Results Debug ===", {
-          totalTrials: newTrialCount,
-          rightSecondSeries: updatedResults.rightSecondSeries,
-          resultsBeforeSave: updatedResults,
+        const totalTime = (Date.now() - testStartTime) / 1000;
+        const finalResults = {
+          ...updatedResults,
+          testingTime: Math.round(totalTime * 100) / 100,
+        };
+
+        setResults(finalResults);
+        console.log("=== Final Results State Update ===", {
+          finalResults,
         });
+
         setTestState("completed");
-        await saveResults(updatedResults);
+        await saveResults(finalResults);
         return;
       }
 
@@ -293,6 +296,7 @@ export function useStroopGame(userId: string) {
       generateMatchedWord,
       generateMismatchedWord,
       saveResults,
+      testStartTime,
     ]
   );
 
@@ -371,6 +375,10 @@ export function useStroopGame(userId: string) {
         await audioRef.current.play();
       }
 
+      const now = Date.now();
+      setTestStartTime(now);
+      setStartTime(now);
+
       setPreviousState({
         wordIndex: -1,
         colorIndex: -1,
@@ -379,7 +387,6 @@ export function useStroopGame(userId: string) {
       setCurrentWord(firstWord);
       setTestState("first");
       setTrialCount(0);
-      setStartTime(Date.now());
       setResults({
         rightFirstSeries: 0,
         rightSecondSeries: 0,
@@ -390,6 +397,7 @@ export function useStroopGame(userId: string) {
         maxTimeFirstSeries: 0,
         maxTimeSecondSeries: 0,
         responseTimes: [],
+        testingTime: 0,
         selectedMusic,
         username,
         gender: selectedGender!,

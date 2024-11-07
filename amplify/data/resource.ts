@@ -12,6 +12,8 @@ const schema = a.schema({
       userId: a.string(),
       username: a.string(),
       gender: a.string(),
+      selectedMusic: a.string(),
+      testingTime: a.float(),
       timestamp: a.string(),
       rightFirstSeries: a.integer(),
       rightSecondSeries: a.integer(),
@@ -25,8 +27,6 @@ const schema = a.schema({
       averageResponseTimeFirstSeries: a.float(),
       averageResponseTimeSecondSeries: a.float(),
       avgResponseDelay: a.float(),
-      testingTime: a.float(),
-      selectedMusic: a.string(),
     })
     .authorization((allow) => [allow.owner()]),
 });
