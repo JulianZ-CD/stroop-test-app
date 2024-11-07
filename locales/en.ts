@@ -20,9 +20,11 @@ const enTranslations = {
   stroopTest: {
     title: "Stroop Test",
     instructions: {
-      part1: "In the first round (practice), all words displayed in black color.",
-      part2: "In the second round (test), the colors will be different from the words.",
-      part3: "Always click the color that matches the MEANING of the word.",
+      part1:
+        "In the first round, all colours are displayed in black font. Select the corresponding tile that matches the name of the colour.",
+      part2:
+        "In the second round, the colour of the font will not match the name of the colour that is written. Select the corresponding tile that matches the colour of the FONT.",
+      part3: "For example, if you see RED in blue font, select the \"blue\" tile because the font is blue.",
       totalTrials: "Total trials: {{total}} ({{perSeries}} per series)",
     },
     colors: {
@@ -38,7 +40,7 @@ const enTranslations = {
       checkingUsername: "Error checking username availability",
       musicRequired: "Please select background music first",
       musicError: "Error playing music, please try again",
-      genderRequired: "Please select gender"
+      genderRequired: "Please select gender",
     },
     progress: {
       practiceRound: "Practice Round",
@@ -64,6 +66,7 @@ const enTranslations = {
     },
     buttons: {
       start: "Start Test",
+      continue: "Continue Test",
     },
     username: {
       title: "Please enter your username",
@@ -78,8 +81,22 @@ const enTranslations = {
     gender: {
       label: "Please select your gender",
       male: "Male",
-      female: "Female"
-    }
+      female: "Female",
+    },
+    firstPhase: {
+      title: "First Phase - Practice Round",
+      instructions: `
+        In the first round, all colours are displayed in black font. Select the corresponding tile that matches the name of the colour written.<br/><br/>
+        For example, if you see "<span style="color: black; font-weight: bold">YELLOW</span>", select the "yellow" tile.
+      `
+    },
+    secondPhase: {
+      title: "Second Phase - Test Round",
+      instructions: `
+        In the second round, the colour of the font will not match the name of the colour that is written. Select the corresponding tile that matches the colour of the FONT.<br/><br/>
+        For example, if you see <span style="color: blue">RED</span>, select the "blue" tile because the font is blue.
+      `
+    },
   },
 };
 

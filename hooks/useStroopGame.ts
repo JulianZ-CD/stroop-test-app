@@ -44,7 +44,9 @@ interface StroopTestModel {
 
 export function useStroopGame(userId: string) {
   // State declarations
-  const [testState, setTestState] = useState<"idle" | "first" | "second" | "completed">("idle");
+  const [testState, setTestState] = useState<
+    "idle" | "first-intro" | "first" | "second-intro" | "second" | "completed"
+  >("idle");
   const { t } = useTranslation();
   const [selectedMusic, setSelectedMusic] = useState<MusicOption | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -71,7 +73,9 @@ export function useStroopGame(userId: string) {
     minTimeSecondSeries: Number.MAX_VALUE,
     maxTimeFirstSeries: 0,
     maxTimeSecondSeries: 0,
-    testingTime: 0,
+    allTestTotalTime: 0,
+    firstTestTotalTime: 0,
+    secondTestTotalTime: 0,
     responseTimes: [],
     selectedMusic: null,
     username: "",
@@ -81,6 +85,10 @@ export function useStroopGame(userId: string) {
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
   const [genderError, setGenderError] = useState("");
   const [testStartTime, setTestStartTime] = useState(0);
+  const [firstTestStartTime, setFirstTestStartTime] = useState<number | null>(null);
+  const [secondTestStartTime, setSecondTestStartTime] = useState<number | null>(null);
+  const [firstTestTotalTime, setFirstTestTotalTime] = useState<number>(0);
+  const [secondTestTotalTime, setSecondTestTotalTime] = useState<number>(0);
 
   const handleMusicSelection = useCallback((music: MusicOption) => {
     if (audioRef.current) {
@@ -147,7 +155,7 @@ export function useStroopGame(userId: string) {
                 1000) *
                 100
             ) / 100,
-          testingTime: latestResults.testingTime,
+          testingTime: latestResults.allTestTotalTime,
           selectedMusic: latestResults.selectedMusic || "NO",
         };
 
@@ -188,8 +196,9 @@ export function useStroopGame(userId: string) {
     const newColorIndex = getNextIndex(previousState.colorIndex, newWordIndex);
 
     const word = COLOR_NAMES[newWordIndex];
-    const correctColor = Object.values(COLORS)[newWordIndex] as ColorValue;
     const textColor = Object.values(COLORS)[newColorIndex] as ColorValue;
+    // const correctColor = Object.values(COLORS)[newWordIndex] as ColorValue;
+    const correctColor = textColor;
 
     setPreviousState({
       wordIndex: newWordIndex,
@@ -207,7 +216,7 @@ export function useStroopGame(userId: string) {
     async (selectedColor: ColorValue) => {
       const responseTime = Date.now() - startTime;
       const isCorrect = selectedColor === currentWord.correctColor;
-      const newTrialCount = trialCount + 1;
+
       let updatedResults = { ...results };
 
       await new Promise<void>((resolve) => {
@@ -219,28 +228,26 @@ export function useStroopGame(userId: string) {
             if (isCorrect) newResults.rightFirstSeries++;
             else newResults.mistakesFirstSeries++;
 
-            if (newResults.mistakesFirstSeries >= MAX_MISTAKES_ALLOWED && !hasShownError.current) {
-              hasShownError.current = true;
-              alert(t("stroopTest.alerts.tooManyErrors"));
-              window.location.reload();
-              return prev;
-            }
-
             newResults.minTimeFirstSeries = Math.min(newResults.minTimeFirstSeries, responseTime);
             newResults.maxTimeFirstSeries = Math.max(newResults.maxTimeFirstSeries, responseTime);
-          } else {
-            if (isCorrect) {
-              newResults.rightSecondSeries++;
-            } else newResults.mistakesSecondSeries++;
+          } else if (testState === "second") {
+            if (isCorrect) newResults.rightSecondSeries++;
+            else newResults.mistakesSecondSeries++;
 
-            if (newResults.mistakesSecondSeries >= MAX_MISTAKES_ALLOWED && !hasShownError.current) {
-              hasShownError.current = true;
-              alert(t("stroopTest.alerts.tooManyErrors"));
-              window.location.reload();
-              return prev;
-            }
             newResults.minTimeSecondSeries = Math.min(newResults.minTimeSecondSeries, responseTime);
             newResults.maxTimeSecondSeries = Math.max(newResults.maxTimeSecondSeries, responseTime);
+          }
+
+          const currentMistakes =
+            testState === "first"
+              ? newResults.mistakesFirstSeries
+              : newResults.mistakesSecondSeries;
+
+          if (currentMistakes >= MAX_MISTAKES_ALLOWED && !hasShownError.current) {
+            hasShownError.current = true;
+            alert(t("stroopTest.alerts.tooManyErrors"));
+            window.location.reload();
+            return prev;
           }
 
           updatedResults = newResults;
@@ -249,41 +256,48 @@ export function useStroopGame(userId: string) {
         });
       });
 
-      if (newTrialCount === TRIALS_PER_SERIES * 2) {
-        const totalTime = (Date.now() - testStartTime) / 1000;
-        const finalResults = {
-          ...updatedResults,
-          testingTime: Math.round(totalTime * 100) / 100,
-        };
+      const newTrialCount = trialCount + 1;
 
-        setResults(finalResults);
-        console.log("=== Final Results State Update ===", {
-          finalResults,
+      // First phase completion
+      if (newTrialCount === TRIALS_PER_SERIES && testState === "first") {
+        if (firstTestStartTime) {
+          const firstTotalTime = (Date.now() - firstTestStartTime) / 1000;
+          setFirstTestTotalTime(firstTotalTime);
+        }
+        setTestState("second-intro");
+        setPreviousState({
+          wordIndex: -1,
+          colorIndex: -1,
         });
-
-        setTestState("completed");
-        await saveResults(finalResults);
         return;
       }
 
-      let nextWord;
-      if (newTrialCount === TRIALS_PER_SERIES) {
-        setTestState("second");
-        setPreviousState({ wordIndex: -1, colorIndex: -1 });
-        nextWord = generateMismatchedWord();
-      } else if (newTrialCount === TRIALS_PER_SERIES * 2) {
-        console.log("=== Final Results Debug ===", {
-          totalTrials: newTrialCount,
-          rightSecondSeries: updatedResults.rightSecondSeries,
-          resultsBeforeSave: updatedResults,
-        });
-        setTestState("completed");
-        await saveResults(updatedResults);
-        return;
-      } else {
-        nextWord = testState === "first" ? generateMatchedWord() : generateMismatchedWord();
+      // Second phase completion
+      if (newTrialCount === TRIALS_PER_SERIES && testState === "second") {
+        if (secondTestStartTime) {
+          const secondTotalTime = (Date.now() - secondTestStartTime) / 1000;
+          setSecondTestTotalTime(secondTotalTime);
+
+          // Create finalResults after the new time is set
+          const finalResults = {
+            ...updatedResults,
+            firstTestTotalTime,
+            secondTestTotalTime: secondTotalTime, // Use the newly calculated time
+            allTestTotalTime: Math.round((firstTestTotalTime + secondTotalTime) * 100) / 100,
+          };
+
+          setResults(finalResults);
+          console.log("=== Final Results State Update ===", {
+            finalResults,
+          });
+
+          setTestState("completed");
+          await saveResults(finalResults);
+          return;
+        }
       }
 
+      const nextWord = testState === "first" ? generateMatchedWord() : generateMismatchedWord();
       setCurrentWord(nextWord);
       setTrialCount(newTrialCount);
       setStartTime(Date.now());
@@ -383,9 +397,9 @@ export function useStroopGame(userId: string) {
         wordIndex: -1,
         colorIndex: -1,
       });
-      const firstWord = generateMatchedWord();
-      setCurrentWord(firstWord);
-      setTestState("first");
+
+      setTestState("first-intro");
+
       setTrialCount(0);
       setResults({
         rightFirstSeries: 0,
@@ -397,7 +411,9 @@ export function useStroopGame(userId: string) {
         maxTimeFirstSeries: 0,
         maxTimeSecondSeries: 0,
         responseTimes: [],
-        testingTime: 0,
+        allTestTotalTime: 0,
+        firstTestTotalTime: 0,
+        secondTestTotalTime: 0,
         selectedMusic,
         username,
         gender: selectedGender!,
@@ -406,6 +422,24 @@ export function useStroopGame(userId: string) {
       console.error("Error starting test:", error);
     }
   }, [generateMatchedWord, selectedMusic, t, username, validateUsername, selectedGender]);
+
+  const startActualTest = useCallback(
+    (phase: "first" | "second") => {
+      const word = phase === "first" ? generateMatchedWord() : generateMismatchedWord();
+      setCurrentWord(word);
+      setTestState(phase);
+      setTrialCount(0); // Reset trial count at the start of each phase
+
+      const now = Date.now();
+      if (phase === "first") {
+        setFirstTestStartTime(now);
+      } else {
+        setSecondTestStartTime(now);
+      }
+      setStartTime(now);
+    },
+    [generateMatchedWord, generateMismatchedWord]
+  );
 
   return {
     testState,
@@ -425,5 +459,6 @@ export function useStroopGame(userId: string) {
     selectedGender,
     genderError,
     handleGenderSelect,
+    startActualTest,
   };
 }

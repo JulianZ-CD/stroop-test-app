@@ -21,8 +21,8 @@ const frTranslations = {
       title: "Test de Stroop",
       instructions: {
         part1: "Dans la première série (pratique), tous les mots sont affichés en noir.",
-        part2: "Dans la deuxième série (test), les couleurs seront différentes des mots.",
-        part3: "Cliquez toujours sur la couleur qui correspond à la SIGNIFICATION du mot.",
+        part2: "Dans le deuxième tour, la couleur de la police ne correspondra pas au nom de la couleur écrite. Sélectionnez la tuile correspondante qui correspond à la couleur de la POLICE.",
+        part3: "Par exemple, si vous voyez ROUGE en police bleue, sélectionnez la tuile \"bleue\" car la police est bleue.",
         totalTrials: "Nombre total d'essais : {{total}} ({{perSeries}} par série)",
       },
       colors: {
@@ -52,6 +52,7 @@ const frTranslations = {
       },
       buttons: {
         start: "Commencer le test",
+        continue: "Continuer le test",
       },
       errors: {
         usernameRequired: "Veuillez entrer un nom d'utilisateur",
@@ -78,6 +79,20 @@ const frTranslations = {
       username: {
         title: "Veuillez entrer votre nom d'utilisateur",
         placeholders: "Entrez votre nom d'utilisateur préféré",
+      },
+      firstPhase: {
+        title: "Première Phase - Série d'entraînement",
+        instructions: `
+          Dans le premier tour, toutes les couleurs sont affichées en noir. Sélectionnez la tuile correspondante qui correspond au nom de la couleur écrite.<br/><br/>
+          Par exemple, si vous voyez "<span style="color: black; font-weight: bold">JAUNE</span>", sélectionnez la tuile "jaune".
+        `
+      },
+      secondPhase: {
+        title: "Deuxième Phase - Série de test",
+        instructions: `
+          Dans le deuxième tour, la couleur de la police ne correspondra pas au nom de la couleur écrite. Sélectionnez la tuile correspondante qui correspond à la couleur de la POLICE.<br/><br/>
+          Par exemple, si vous voyez <span style="color: blue">ROUGE</span>, sélectionnez la tuile "bleue" car la police est bleue.
+        `
       },
     },
   }

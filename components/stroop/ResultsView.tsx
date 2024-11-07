@@ -87,7 +87,7 @@ export function ResultsView({
             {formatTime(results.responseTimes.reduce((a, b) => a + b, 0) / (TRIALS_PER_SERIES * 2))}
           </div>
           <div>
-            {t("stroopTest.results.totalTestingTime")}: {results.testingTime.toFixed(2)}s
+            {t("stroopTest.results.totalTestingTime")}: {results.allTestTotalTime.toFixed(2)}s
           </div>
         </div>
       </div>
@@ -98,6 +98,9 @@ export function ResultsView({
           {t("common.backToHome")}
         </button>
       </div>
+
+      <p>First Test Total Time: {results.firstTestTotalTime.toFixed(2)} seconds</p>
+      <p>Second Test Total Time: {results.secondTestTotalTime.toFixed(2)} seconds</p>
     </div>
   );
 }

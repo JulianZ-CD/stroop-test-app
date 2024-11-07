@@ -8,6 +8,7 @@ import { UsernameInput } from "@/components/stroop/UsernameInput";
 import { MusicSelection } from "@/components/stroop/MusicSelection";
 import { GenderSelection } from "@/components/stroop/GenderSelection";
 import { useStroopGame } from "@/hooks/useStroopGame";
+import parse from 'html-react-parser';
 
 export const COLORS = {
   RED: "#ff0000",
@@ -56,7 +57,9 @@ export interface Results {
   maxTimeFirstSeries: number;
   maxTimeSecondSeries: number;
   responseTimes: number[];
-  testingTime: number;
+  firstTestTotalTime: number;
+  secondTestTotalTime: number;
+  allTestTotalTime: number;
   selectedMusic: MusicOption | null;
   username: string;
   gender: string;
@@ -84,6 +87,7 @@ export default function StroopTest() {
     selectedGender,
     genderError,
     handleGenderSelect,
+    startActualTest,
   } = useStroopGame(user.username);
 
   const getColorTranslationKey = (colorName: string): string =>
@@ -159,6 +163,34 @@ export default function StroopTest() {
     );
   }
 
+  if (testState === "first-intro") {
+    return (
+      <div>
+        <h2>{t("stroopTest.firstPhase.title")}</h2>
+        <div className="instructions">
+          {parse(t("stroopTest.firstPhase.instructions"))}
+        </div>
+        <button onClick={() => startActualTest("first")}>
+          {t("stroopTest.buttons.continue")}
+        </button>
+      </div>
+    );
+  }
+
+  if (testState === "second-intro") {
+    return (
+      <div>
+        <h2>{t("stroopTest.secondPhase.title")}</h2>
+        <div className="instructions">
+          {parse(t("stroopTest.secondPhase.instructions"))}
+        </div>
+        <button onClick={() => startActualTest("second")}>
+          {t("stroopTest.buttons.continue")}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <main>
       <div className="stroop-container">
@@ -171,7 +203,7 @@ export default function StroopTest() {
           )}
           :{" "}
           {t("stroopTest.progress.trial", {
-            current: (trialCount % TRIALS_PER_SERIES) + 1,
+            current: trialCount + 1,
             total: TRIALS_PER_SERIES,
           })}
         </div>
