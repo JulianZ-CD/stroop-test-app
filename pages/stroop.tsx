@@ -8,6 +8,7 @@ import { UsernameInput } from "@/components/stroop/UsernameInput";
 import { MusicSelection } from "@/components/stroop/MusicSelection";
 import { GenderSelection } from "@/components/stroop/GenderSelection";
 import { useStroopGame } from "@/hooks/useStroopGame";
+import parse from 'html-react-parser';
 
 export const COLORS = {
   RED: "#ff0000",
@@ -166,9 +167,11 @@ export default function StroopTest() {
     return (
       <div>
         <h2>{t("stroopTest.firstPhase.title")}</h2>
-        <p>{t("stroopTest.firstPhase.instructions")}</p>
+        <div className="instructions">
+          {parse(t("stroopTest.firstPhase.instructions"))}
+        </div>
         <button onClick={() => startActualTest("first")}>
-          {t("stroopTest.start")}
+          {t("stroopTest.buttons.continue")}
         </button>
       </div>
     );
@@ -178,9 +181,11 @@ export default function StroopTest() {
     return (
       <div>
         <h2>{t("stroopTest.secondPhase.title")}</h2>
-        <p>{t("stroopTest.secondPhase.instructions")}</p>
+        <div className="instructions">
+          {parse(t("stroopTest.secondPhase.instructions"))}
+        </div>
         <button onClick={() => startActualTest("second")}>
-          {t("stroopTest.continue")}
+          {t("stroopTest.buttons.continue")}
         </button>
       </div>
     );

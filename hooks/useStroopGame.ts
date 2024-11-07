@@ -196,8 +196,9 @@ export function useStroopGame(userId: string) {
     const newColorIndex = getNextIndex(previousState.colorIndex, newWordIndex);
 
     const word = COLOR_NAMES[newWordIndex];
-    const correctColor = Object.values(COLORS)[newWordIndex] as ColorValue;
     const textColor = Object.values(COLORS)[newColorIndex] as ColorValue;
+    // const correctColor = Object.values(COLORS)[newWordIndex] as ColorValue;
+    const correctColor = textColor;
 
     setPreviousState({
       wordIndex: newWordIndex,
@@ -215,7 +216,7 @@ export function useStroopGame(userId: string) {
     async (selectedColor: ColorValue) => {
       const responseTime = Date.now() - startTime;
       const isCorrect = selectedColor === currentWord.correctColor;
-      
+
       let updatedResults = { ...results };
 
       await new Promise<void>((resolve) => {
@@ -237,9 +238,10 @@ export function useStroopGame(userId: string) {
             newResults.maxTimeSecondSeries = Math.max(newResults.maxTimeSecondSeries, responseTime);
           }
 
-          const currentMistakes = testState === "first" 
-            ? newResults.mistakesFirstSeries 
-            : newResults.mistakesSecondSeries;
+          const currentMistakes =
+            testState === "first"
+              ? newResults.mistakesFirstSeries
+              : newResults.mistakesSecondSeries;
 
           if (currentMistakes >= MAX_MISTAKES_ALLOWED && !hasShownError.current) {
             hasShownError.current = true;
@@ -275,7 +277,7 @@ export function useStroopGame(userId: string) {
         if (secondTestStartTime) {
           const secondTotalTime = (Date.now() - secondTestStartTime) / 1000;
           setSecondTestTotalTime(secondTotalTime);
-          
+
           // Create finalResults after the new time is set
           const finalResults = {
             ...updatedResults,
@@ -427,7 +429,7 @@ export function useStroopGame(userId: string) {
       setCurrentWord(word);
       setTestState(phase);
       setTrialCount(0); // Reset trial count at the start of each phase
-      
+
       const now = Date.now();
       if (phase === "first") {
         setFirstTestStartTime(now);
