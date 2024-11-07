@@ -79,7 +79,15 @@ const enTranslations = {
       label: "Please select your gender",
       male: "Male",
       female: "Female"
-    }
+    },
+    firstPhase: {
+      title: "First Phase - Practice Round",
+      instructions: "In this phase, all words will be displayed in BLACK. Click the color button that matches the MEANING of the word.",
+    },
+    secondPhase: {
+      title: "Second Phase - Test Round",
+      instructions: "In this phase, words will be displayed in DIFFERENT colors. Still click the color button that matches the MEANING of the word, not its display color.",
+    },
   },
 };
 

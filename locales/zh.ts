@@ -79,6 +79,14 @@ const cnTranslations = {
       title: "请输入用户名",
       placeholders: "请输入您的昵称",
     },
+    firstPhase: {
+      title: "第一阶段 - 练习轮",
+      instructions: "在这个阶段，所有单词都将以黑色显示。请点击与单词含义相匹配的颜色按钮。",
+    },
+    secondPhase: {
+      title: "第二阶段 - 测试轮",
+      instructions: "在这个阶段，单词将以不同的颜色显示。仍然要点击与单词含义相匹配的颜色按钮，而不是显示的颜色。",
+    },
   },
 };
 

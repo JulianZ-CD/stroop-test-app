@@ -79,6 +79,14 @@ const frTranslations = {
         title: "Veuillez entrer votre nom d'utilisateur",
         placeholders: "Entrez votre nom d'utilisateur préféré",
       },
+      firstPhase: {
+        title: "Première Phase - Série d'entraînement",
+        instructions: "Dans cette phase, tous les mots seront affichés en NOIR. Cliquez sur le bouton de couleur qui correspond à la SIGNIFICATION du mot.",
+      },
+      secondPhase: {
+        title: "Deuxième Phase - Série de test",
+        instructions: "Dans cette phase, les mots seront affichés en DIFFÉRENTES couleurs. Cliquez toujours sur le bouton de couleur qui correspond à la SIGNIFICATION du mot, pas à sa couleur d'affichage.",
+      },
     },
   }
 
