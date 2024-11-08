@@ -27,11 +27,11 @@ const cnTranslations = {
       totalTrials: "总试验次数：{{total}}（每轮{{perSeries}}次）",
     },
     colors: {
-      red: "红色",
-      yellow: "黄色",
-      blue: "蓝色",
-      black: "黑色",
-      green: "绿色",
+      red: "红",
+      yellow: "黄",
+      blue: "蓝",
+      black: "黑",
+      green: "绿",
     },
     progress: {
       practiceRound: "练习轮",
@@ -85,14 +85,14 @@ const cnTranslations = {
       title: "第一阶段 - 练习轮",
       instructions: `
         在第一轮中，所有颜色词都以黑色字体显示。请选择与写出的颜色名称相匹配的色块。<br/><br/>
-        例如，如果你看到"<span style="color: black; font-weight: bold">黄色</span>"，请选择"黄色"色块。
+        例如，如果你看到"<span style="color: black; font-weight: bold">黄</span>"，请选择"黄色"色块。
       `
     },
     secondPhase: {
       title: "第二阶段 - 测试轮",
       instructions: `
         在第二轮中，文字的颜色将与写出的颜色名称不匹配。请选择与文字颜色相匹配的色块。<br/><br/>
-        例如，如果你看到<span style="color: blue">红色</span>，请选择"蓝色"色块，因为文字的颜色是蓝色。
+        例如，如果你看到<span style="color: blue">红</span>，请选择"蓝色"色块，因为文字的颜色是蓝色。
       `
     },
   },
