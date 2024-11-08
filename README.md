@@ -16,6 +16,7 @@ This application is a full-stack Next.js implementation of the Stroop Test, inte
 ### Technical Features
 - **Authentication**: Secure user authentication via Amazon Cognito
 - **Data Storage**: Real-time data persistence with AWS AppSync and DynamoDB
+- **CI/CD Pipeline**: Automated deployment pipeline with AWS Amplify
 - **Internationalization**: Support for multiple languages
 - **Error Handling**: data validation and performance monitoring
 
@@ -26,6 +27,28 @@ This application is a full-stack Next.js implementation of the Stroop Test, inte
 - Database: Amazon DynamoDB
 - API: AWS AppSync (GraphQL)
 - Styling: Custom CSS
+
+## Features Preview
+
+### Authentication
+<div align="center">
+  <img src="./public/images/login.png" alt="Login Interface" width="800"/>
+</div>
+
+### Homepage Interface
+<div align="center">
+  <img src="./public/images/homepage.png" alt="Homepage Interface" width="800"/>
+</div>
+
+### Test Interface
+<div align="center">
+  <img src="./public/images/test.png" alt="Test Interface" width="800"/>
+</div>
+
+### Amplify Console
+<div align="center">
+  <img src="./public/images/amplify.png" alt="Amplify Console" width="800"/>
+</div>
 
 ## Getting Started
 
@@ -64,3 +87,4 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ## License
 This project is licensed under the MIT-0 License - see the [LICENSE](LICENSE) file for details.
+
