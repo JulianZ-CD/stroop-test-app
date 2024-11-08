@@ -14,6 +14,7 @@ const cnTranslations = {
     stroopSection: {
       title: "斯特鲁普测试",
       description: "通过斯特鲁普测试检测你的认知能力",
+      languageReminder: "请选择您的母语",
       startButton: "开始斯特鲁普测试",
     },
   },

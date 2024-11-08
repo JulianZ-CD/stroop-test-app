@@ -14,6 +14,7 @@ const enTranslations = {
     stroopSection: {
       title: "Stroop Test",
       description: "Test your cognitive abilities with the Stroop Test",
+      languageReminder: "Please select your native language",
       startButton: "Start Stroop Test",
     },
   },

@@ -14,6 +14,7 @@ const frTranslations = {
       stroopSection: {
         title: "Test de Stroop",
         description: "Testez vos capacités cognitives avec le test de Stroop",
+        languageReminder: "Veuillez sélectionner votre langue maternelle",
         startButton: "Commencer le test de Stroop",
       },
     },

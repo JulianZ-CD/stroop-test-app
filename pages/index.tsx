@@ -79,6 +79,7 @@ export default function App() {
       <div className="stroop-section">
         <h2>{t("home.stroopSection.title")}</h2>
         <p className="section-description">{t("home.stroopSection.description")}</p>
+        <p className="section-reminder">⚠️ {t("home.stroopSection.languageReminder")}</p>
         <button className="start-button" onClick={() => router.push("/stroop")}>
           {t("home.stroopSection.startButton")}
         </button>
