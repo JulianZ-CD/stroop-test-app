@@ -17,7 +17,7 @@ This application is a full-stack Next.js implementation of the Stroop Test, inte
 - **Authentication**: Secure user authentication via Amazon Cognito
 - **Data Storage**: Real-time data persistence with AWS AppSync and DynamoDB
 - **Internationalization**: Support for multiple languages
-- **Todo List**: Basic todo functionality for demonstration purposes
+- **Error Handling**: data validation and performance monitoring
 
 ## Technology Stack
 - Frontend: Next.js (Pages Router)
