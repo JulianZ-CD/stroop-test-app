@@ -22,85 +22,72 @@ export default function App() {
   const [musicStats, setMusicStats] = useState<MusicStats[]>([]);
   const [showStats, setShowStats] = useState(false);
 
-  function listTodos() {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
-  }
+  // function listTodos() {
+  //   client.models.Todo.observeQuery().subscribe({
+  //     next: (data) => setTodos([...data.items]),
+  //   });
+  // }
 
-  useEffect(() => {
-    listTodos();
-  }, []);
+  // useEffect(() => {
+  //   listTodos();
+  // }, []);
 
-  async function createTodo() {
-    const content = window.prompt("Todo content");
+  // async function createTodo() {
+  //   const content = window.prompt("Todo content");
 
-    if (!content?.trim()) {
-      return;
-    }
+  //   if (!content?.trim()) {
+  //     return;
+  //   }
 
-    try {
-      await client.models.Todo.create({
-        content: content.trim(),
-      });
-    } catch (error) {
-      console.error("Error creating todo:", error);
-      alert("Failed to create todo");
-    }
-  }
+  //   try {
+  //     await client.models.Todo.create({
+  //       content: content.trim(),
+  //     });
+  //   } catch (error) {
+  //     console.error("Error creating todo:", error);
+  //     alert("Failed to create todo");
+  //   }
+  // }
 
-  function deleteTodo(id: string) {
-    client.models.Todo.delete({ id });
-  }
+  // function deleteTodo(id: string) {
+  //   client.models.Todo.delete({ id });
+  // }
 
   function listMusicStats() {
-    client.models.StroopTest.list().then(({ data: items }) => {
-      console.log('All items:', items);
+    client.models.StroopTest.list()
+      .then(({ data: items }) => {
+        console.log("All items:", items);
 
-      const stats: MusicStats[] = [
-        {
-          music: 'No Music',
-          male: items.filter(test => 
-            test.selectedMusic === 'NO' && 
-            test.gender === 'male'
-          ).length,
-          female: items.filter(test => 
-            test.selectedMusic === 'NO' && 
-            test.gender === 'female'
-          ).length
-        },
-        {
-          music: 'Classical Music',
-          male: items.filter(test => 
-            test.selectedMusic === 'MOZART' && 
-            test.gender === 'male'
-          ).length,
-          female: items.filter(test => 
-            test.selectedMusic === 'MOZART' && 
-            test.gender === 'female'
-          ).length
-        },
-        {
-          music: 'Pop Music',
-          male: items.filter(test => 
-            test.selectedMusic === 'POP' && 
-            test.gender === 'male'
-          ).length,
-          female: items.filter(test => 
-            test.selectedMusic === 'POP' && 
-            test.gender === 'female'
-          ).length
-        }
-      ];
+        const stats: MusicStats[] = [
+          {
+            music: "No Music",
+            male: items.filter((test) => test.selectedMusic === "NO" && test.gender === "male")
+              .length,
+            female: items.filter((test) => test.selectedMusic === "NO" && test.gender === "female")
+              .length,
+          },
+          {
+            music: "Classical Music",
+            male: items.filter((test) => test.selectedMusic === "MOZART" && test.gender === "male")
+              .length,
+            female: items.filter(
+              (test) => test.selectedMusic === "MOZART" && test.gender === "female"
+            ).length,
+          },
+          {
+            music: "Pop Music",
+            male: items.filter((test) => test.selectedMusic === "POP" && test.gender === "male")
+              .length,
+            female: items.filter((test) => test.selectedMusic === "POP" && test.gender === "female")
+              .length,
+          },
+        ];
 
-      setMusicStats(stats);
-
-      console.log('NO music tests:', items.filter(test => test.selectedMusic === 'NO'));
-      console.log('MOZART music tests:', items.filter(test => test.selectedMusic === 'MOZART'));
-      console.log('POP music tests:', items.filter(test => test.selectedMusic === 'POP'));
-    }).catch(error => {
-      console.error('Error fetching stats:', error);
-    });
+        setMusicStats(stats);
+      })
+      .catch((error) => {
+        console.error("Error fetching stats:", error);
+      });
   }
 
   useEffect(() => {
@@ -111,6 +98,7 @@ export default function App() {
     <main>
       <div className="header">
         {/* <h1>{t("home.title")}</h1> */}
+        <p>Group 1: Brad, Yufei, Yulong</p>
         <select
           value={locale}
           onChange={(e) => changeLocale(e.target.value as "en" | "zh")}
@@ -151,13 +139,13 @@ export default function App() {
       <br />
 
       <div className="mt-8">
-        <button 
+        <button
           onClick={() => setShowStats(!showStats)}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
-          {showStats ? 'Hide Statistics' : 'Show Statistics'}
+          {showStats ? "Hide Statistics" : "Show Statistics"}
         </button>
-        
+
         {showStats && (
           <div className="mt-4">
             <h2 className="text-xl font-bold mb-4">Music Selection Statistics</h2>
