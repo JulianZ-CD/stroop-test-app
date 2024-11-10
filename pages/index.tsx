@@ -4,14 +4,23 @@ import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 import { useRouter } from "next/router";
 import { useTranslation } from "@/contexts/LanguageContext";
+import { MUSIC_OPTIONS } from "@/pages/stroop";
 
 const client = generateClient<Schema>();
+
+interface MusicStats {
+  music: string;
+  male: number;
+  female: number;
+}
 
 export default function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
   const { user, signOut } = useAuthenticator();
   const router = useRouter();
   const { t, locale, changeLocale } = useTranslation();
+  const [musicStats, setMusicStats] = useState<MusicStats[]>([]);
+  const [showStats, setShowStats] = useState(false);
 
   function listTodos() {
     client.models.Todo.observeQuery().subscribe({
@@ -43,6 +52,23 @@ export default function App() {
   function deleteTodo(id: string) {
     client.models.Todo.delete({ id });
   }
+
+  function listMusicStats() {
+    client.models.StroopTest.observeQuery().subscribe({
+      next: ({ items }) => {
+        const stats: MusicStats[] = Object.entries(MUSIC_OPTIONS).map(([key, option]) => ({
+          music: option.name,
+          male: items.filter(test => test.selectedMusic === key && test.gender === 'male').length,
+          female: items.filter(test => test.selectedMusic === key && test.gender === 'female').length
+        }));
+        setMusicStats(stats);
+      }
+    });
+  }
+
+  useEffect(() => {
+    listMusicStats();
+  }, []);
 
   return (
     <main>
@@ -83,6 +109,32 @@ export default function App() {
         <button className="start-button" onClick={() => router.push("/stroop")}>
           {t("home.stroopSection.startButton")}
         </button>
+      </div>
+
+      <br />
+
+      <div className="mt-8">
+        <button 
+          onClick={() => setShowStats(!showStats)}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          {showStats ? 'Hide Statistics' : 'Show Statistics'}
+        </button>
+        
+        {showStats && (
+          <div className="mt-4">
+            <h2 className="text-xl font-bold mb-4">Music Selection Statistics</h2>
+            <div className="grid grid-cols-3 gap-4">
+              {musicStats.map((stat) => (
+                <div key={stat.music} className="p-4 border rounded">
+                  <h3 className="font-semibold">{stat.music}</h3>
+                  <p>Male participants: {stat.male}</p>
+                  <p>Female participants: {stat.female}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </main>
   );
