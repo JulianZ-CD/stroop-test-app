@@ -56,12 +56,26 @@ export default function App() {
   function listMusicStats() {
     client.models.StroopTest.observeQuery().subscribe({
       next: ({ items }) => {
-        const stats: MusicStats[] = Object.entries(MUSIC_OPTIONS).map(([key, option]) => ({
-          music: option.name,
-          male: items.filter(test => test.selectedMusic === key && test.gender === 'male').length,
-          female: items.filter(test => test.selectedMusic === key && test.gender === 'female').length
-        }));
+        const stats: MusicStats[] = [
+          {
+            music: 'No Music',
+            male: items.filter(test => test.selectedMusic === 'NO' && test.gender === 'male').length,
+            female: items.filter(test => test.selectedMusic === 'NO' && test.gender === 'female').length
+          },
+          {
+            music: 'Classical Music',
+            male: items.filter(test => test.selectedMusic === 'MOZART' && test.gender === 'male').length,
+            female: items.filter(test => test.selectedMusic === 'MOZART' && test.gender === 'female').length
+          },
+          {
+            music: 'Pop Music',
+            male: items.filter(test => test.selectedMusic === 'POP' && test.gender === 'male').length,
+            female: items.filter(test => test.selectedMusic === 'POP' && test.gender === 'female').length
+          }
+        ];
         setMusicStats(stats);
+        
+        console.log('Raw data:', items.map(item => item.selectedMusic));
       }
     });
   }
