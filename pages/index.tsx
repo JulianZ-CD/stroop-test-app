@@ -54,29 +54,52 @@ export default function App() {
   }
 
   function listMusicStats() {
-    client.models.StroopTest.observeQuery().subscribe({
-      next: ({ items }) => {
-        const stats: MusicStats[] = [
-          {
-            music: 'No Music',
-            male: items.filter(test => test.selectedMusic === 'NO' && test.gender === 'male').length,
-            female: items.filter(test => test.selectedMusic === 'NO' && test.gender === 'female').length
-          },
-          {
-            music: 'Classical Music',
-            male: items.filter(test => test.selectedMusic === 'MOZART' && test.gender === 'male').length,
-            female: items.filter(test => test.selectedMusic === 'MOZART' && test.gender === 'female').length
-          },
-          {
-            music: 'Pop Music',
-            male: items.filter(test => test.selectedMusic === 'POP' && test.gender === 'male').length,
-            female: items.filter(test => test.selectedMusic === 'POP' && test.gender === 'female').length
-          }
-        ];
-        setMusicStats(stats);
-        
-        console.log('Raw data:', items.map(item => item.selectedMusic));
-      }
+    client.models.StroopTest.list().then(({ data: items }) => {
+      console.log('All items:', items);
+
+      const stats: MusicStats[] = [
+        {
+          music: 'No Music',
+          male: items.filter(test => 
+            test.selectedMusic === 'NO' && 
+            test.gender === 'male'
+          ).length,
+          female: items.filter(test => 
+            test.selectedMusic === 'NO' && 
+            test.gender === 'female'
+          ).length
+        },
+        {
+          music: 'Classical Music',
+          male: items.filter(test => 
+            test.selectedMusic === 'MOZART' && 
+            test.gender === 'male'
+          ).length,
+          female: items.filter(test => 
+            test.selectedMusic === 'MOZART' && 
+            test.gender === 'female'
+          ).length
+        },
+        {
+          music: 'Pop Music',
+          male: items.filter(test => 
+            test.selectedMusic === 'POP' && 
+            test.gender === 'male'
+          ).length,
+          female: items.filter(test => 
+            test.selectedMusic === 'POP' && 
+            test.gender === 'female'
+          ).length
+        }
+      ];
+
+      setMusicStats(stats);
+
+      console.log('NO music tests:', items.filter(test => test.selectedMusic === 'NO'));
+      console.log('MOZART music tests:', items.filter(test => test.selectedMusic === 'MOZART'));
+      console.log('POP music tests:', items.filter(test => test.selectedMusic === 'POP'));
+    }).catch(error => {
+      console.error('Error fetching stats:', error);
     });
   }
 
