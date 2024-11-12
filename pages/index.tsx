@@ -53,41 +53,32 @@ export default function App() {
   //   client.models.Todo.delete({ id });
   // }
 
-  function listMusicStats() {
-    client.models.StroopTest.list()
-      .then(({ data: items }) => {
-        console.log("All items:", items);
+  async function listMusicStats() {
+    try {
+      const { data: allTests } = await client.models.StroopTest.list();
+      console.log(allTests);
 
-        const stats: MusicStats[] = [
-          {
-            music: "No Music",
-            male: items.filter((test) => test.selectedMusic === "NO" && test.gender === "male")
-              .length,
-            female: items.filter((test) => test.selectedMusic === "NO" && test.gender === "female")
-              .length,
-          },
-          {
-            music: "Classical Music",
-            male: items.filter((test) => test.selectedMusic === "MOZART" && test.gender === "male")
-              .length,
-            female: items.filter(
-              (test) => test.selectedMusic === "MOZART" && test.gender === "female"
-            ).length,
-          },
-          {
-            music: "Pop Music",
-            male: items.filter((test) => test.selectedMusic === "POP" && test.gender === "male")
-              .length,
-            female: items.filter((test) => test.selectedMusic === "POP" && test.gender === "female")
-              .length,
-          },
-        ];
+      const musicTypes = [
+        { key: "NO", label: "No Music" },
+        { key: "MOZART", label: "Classical Music" },
+        { key: "POP", label: "Pop Music" }
+      ];
 
-        setMusicStats(stats);
-      })
-      .catch((error) => {
-        console.error("Error fetching stats:", error);
-      });
+
+      const stats: MusicStats[] = musicTypes.map(({ key, label }) => ({
+        music: label,
+        male: allTests.filter(test => 
+          test.selectedMusic === key && test.gender === "male"
+        ).length,
+        female: allTests.filter(test => 
+          test.selectedMusic === key && test.gender === "female"
+        ).length,
+      }));
+
+      setMusicStats(stats);
+    } catch (error) {
+      console.error("Error fetching stats:", error);
+    }
   }
 
   useEffect(() => {

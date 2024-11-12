@@ -8,7 +8,7 @@ import { UsernameInput } from "@/components/stroop/UsernameInput";
 import { MusicSelection } from "@/components/stroop/MusicSelection";
 import { GenderSelection } from "@/components/stroop/GenderSelection";
 import { useStroopGame } from "@/hooks/useStroopGame";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
 
 export const COLORS = {
   RED: "#ff0000",
@@ -148,11 +148,7 @@ export default function StroopTest() {
             />
 
             <div className="navigation-buttons">
-              <button
-                onClick={startTest}
-              >
-                {t("stroopTest.buttons.start")}
-              </button>
+              <button onClick={startTest}>{t("stroopTest.buttons.start")}</button>
               <button className="home-button" onClick={() => router.push("/")}>
                 {t("common.backToHome")}
               </button>
@@ -167,12 +163,8 @@ export default function StroopTest() {
     return (
       <div>
         <h2>{t("stroopTest.firstPhase.title")}</h2>
-        <div className="instructions">
-          {parse(t("stroopTest.firstPhase.instructions"))}
-        </div>
-        <button onClick={() => startActualTest("first")}>
-          {t("stroopTest.buttons.continue")}
-        </button>
+        <div className="instructions">{parse(t("stroopTest.firstPhase.instructions"))}</div>
+        <button onClick={() => startActualTest("first")}>{t("stroopTest.buttons.continue")}</button>
       </div>
     );
   }
@@ -181,9 +173,7 @@ export default function StroopTest() {
     return (
       <div>
         <h2>{t("stroopTest.secondPhase.title")}</h2>
-        <div className="instructions">
-          {parse(t("stroopTest.secondPhase.instructions"))}
-        </div>
+        <div className="instructions">{parse(t("stroopTest.secondPhase.instructions"))}</div>
         <button onClick={() => startActualTest("second")}>
           {t("stroopTest.buttons.continue")}
         </button>
