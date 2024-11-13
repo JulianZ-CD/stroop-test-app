@@ -1,5 +1,7 @@
 # Stroop Test Application with AWS Amplify
 
+> Try it now: [Stroop Test App](https://main.ds0t19nwq4vif.amplifyapp.com)
+
 This application is a full-stack Next.js implementation of the Stroop Test, integrated with AWS Amplify for backend services. The Stroop Test is a widely used psychological test that measures cognitive abilities and response times.
 
 ## Features
@@ -20,7 +22,9 @@ This application is a full-stack Next.js implementation of the Stroop Test, inte
 - **Internationalization**: Support for multiple languages
 - **Error Handling**: data validation and performance monitoring
 
-## Technology Stack
+## Architecture
+
+### Technology Stack
 - Frontend: Next.js (Pages Router)
 - Backend: AWS Amplify
 - Authentication: Amazon Cognito
@@ -28,26 +32,82 @@ This application is a full-stack Next.js implementation of the Stroop Test, inte
 - API: AWS AppSync (GraphQL)
 - Styling: Custom CSS
 
+### System Architecture
+
+#### Complete Technology Stack Flow
+```mermaid
+graph LR
+    A[Next.js Frontend] -->|Auth Request| B[Amazon Cognito]
+    B -->|JWT Token| A
+    
+    A -->|GraphQL Request| C[AWS AppSync]
+    C -->|Transform Request| D[DynamoDB]
+    D -->|Return Data| C
+    C -->|GraphQL Response| A
+    
+    E[AWS Amplify CLI] -->|Deploy| F[AWS CloudFormation]
+    F -->|Create Resources| G[AWS Infrastructure]
+    
+    H[Git Push] -->|Trigger| I[Amplify CI/CD]
+    I -->|Build & Deploy| A
+```
+
+#### Authentication Flow
+```mermaid
+graph LR
+    A[User] -->|Login| B[Authenticator Component]
+    B -->|Credentials| C[Amazon Cognito]
+    C -->|JWT Token| B
+    B -->|Store Token| D[Amplify Auth]
+    D -->|Auth Context| E[Protected Routes]
+```
+
+#### Stroop Test Data Flow
+```mermaid
+graph LR
+    A[Test Interface] -->|User Response| B[useStroopGame Hook]
+    B -->|Calculate Results| C[Results Processing]
+    C -->|Save Data| D[GraphQL Mutation]
+    D -->|Store| E[DynamoDB]
+    
+    F[Statistics Page] -->|Fetch Data| G[GraphQL Query]
+    G -->|Retrieve| E
+    E -->|Test Results| F
+```
+
+#### Deployment Flow
+```mermaid
+graph LR
+    A[Local Development] -->|Git Push| B[GitHub Repository]
+    B -->|Trigger| C[Amplify Console]
+    C -->|Build| D[Next.js Build]
+    D -->|Deploy| E[AWS CloudFront]
+    E -->|Serve| F[End Users]
+    
+    G[Amplify CLI] -->|Configure| H[Backend Resources]
+    H -->|Update| I[AWS Services]
+```
+
 ## Features Preview
 
 ### Authentication
-<div align="center">
-  <img src="./public/images/login.png" alt="Login Interface" width="800"/>
+<div>
+  <img src="./public/images/login.png" alt="Login Interface" width="50%" max-width="600px"/>
 </div>
 
 ### Homepage Interface
-<div align="center">
-  <img src="./public/images/homepage.png" alt="Homepage Interface" width="800"/>
+<div>
+  <img src="./public/images/homepage.png" alt="Homepage Interface" width="50%" max-width="600px"/>
 </div>
 
 ### Test Interface
-<div align="center">
-  <img src="./public/images/test.png" alt="Test Interface" width="800"/>
+<div>
+  <img src="./public/images/test.png" alt="Test Interface" width="50%" max-width="600px"/>
 </div>
 
 ### Amplify Console
-<div align="center">
-  <img src="./public/images/amplify.png" alt="Amplify Console" width="800"/>
+<div>
+  <img src="./public/images/amplify.png" alt="Amplify Console" width="50%" max-width="600px"/>
 </div>
 
 ## Getting Started
