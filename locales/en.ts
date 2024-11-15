@@ -17,6 +17,14 @@ const enTranslations = {
       languageReminder: "Please select your native language",
       startButton: "Start Stroop Test",
     },
+    statsSection: {
+      title: "Statistics",
+      description: "View test results and statistics (requires login)",
+      viewStats: "View Statistics",
+      maleParticipants: "Male Participants",
+      femaleParticipants: "Female Participants",
+      totalParticipants: "Total Participants",
+    }
   },
   stroopTest: {
     title: "Stroop Test",

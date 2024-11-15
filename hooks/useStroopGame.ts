@@ -44,7 +44,7 @@ interface StroopTestModel {
   allTestTotalTime: number;
 }
 
-export function useStroopGame(userId: string) {
+export function useStroopGame() {
   // State declarations
   const [testState, setTestState] = useState<
     "idle" | "first-intro" | "first" | "second-intro" | "second" | "completed"
@@ -116,57 +116,56 @@ export function useStroopGame(userId: string) {
     };
   }, [selectedMusic]);
 
-  const saveResults = useCallback(
-    async (latestResults: Results) => {
-      try {
-        const testData: StroopTestModel = {
-          userId,
-          username: latestResults.username,
-          gender: latestResults.gender,
-          timestamp: new Date().toISOString(),
-          rightFirstSeries: latestResults.rightFirstSeries,
-          rightSecondSeries: latestResults.rightSecondSeries,
-          mistakesFirstSeries: latestResults.mistakesFirstSeries,
-          mistakesSecondSeries: latestResults.mistakesSecondSeries,
-          averageResponsePercent:
-            ((latestResults.rightFirstSeries + latestResults.rightSecondSeries) /
-              (TRIALS_PER_SERIES * 2)) *
-            100,
-          minTimeFirstSeries: Math.round((latestResults.minTimeFirstSeries / 1000) * 100) / 100,
-          minTimeSecondSeries: Math.round((latestResults.minTimeSecondSeries / 1000) * 100) / 100,
-          maxTimeFirstSeries: Math.round((latestResults.maxTimeFirstSeries / 1000) * 100) / 100,
-          maxTimeSecondSeries: Math.round((latestResults.maxTimeSecondSeries / 1000) * 100) / 100,
-          averageResponseTimeFirstSeries: Math.round(
+  const saveResults = useCallback(async (latestResults: Results) => {
+    try {
+      const testData = {
+        username: latestResults.username,
+        gender: latestResults.gender,
+        timestamp: new Date().toISOString(),
+        rightFirstSeries: latestResults.rightFirstSeries,
+        rightSecondSeries: latestResults.rightSecondSeries,
+        mistakesFirstSeries: latestResults.mistakesFirstSeries,
+        mistakesSecondSeries: latestResults.mistakesSecondSeries,
+        averageResponsePercent:
+          ((latestResults.rightFirstSeries + latestResults.rightSecondSeries) /
+            (TRIALS_PER_SERIES * 2)) *
+          100,
+        minTimeFirstSeries: Math.round((latestResults.minTimeFirstSeries / 1000) * 100) / 100,
+        minTimeSecondSeries: Math.round((latestResults.minTimeSecondSeries / 1000) * 100) / 100,
+        maxTimeFirstSeries: Math.round((latestResults.maxTimeFirstSeries / 1000) * 100) / 100,
+        maxTimeSecondSeries: Math.round((latestResults.maxTimeSecondSeries / 1000) * 100) / 100,
+        averageResponseTimeFirstSeries:
+          Math.round(
             (latestResults.responseTimes.slice(0, TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
               TRIALS_PER_SERIES /
               1000) *
               100
           ) / 100,
-          averageResponseTimeSecondSeries: Math.round(
+        averageResponseTimeSecondSeries:
+          Math.round(
             (latestResults.responseTimes.slice(TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
               TRIALS_PER_SERIES /
               1000) *
               100
           ) / 100,
-          avgResponseDelay: Math.round(
+        avgResponseDelay:
+          Math.round(
             (latestResults.responseTimes.reduce((a, b) => a + b, 0) /
               (TRIALS_PER_SERIES * 2) /
               1000) *
               100
           ) / 100,
-          selectedMusic: latestResults.selectedMusic || "NO",
-          firstTestTotalTime: latestResults.firstTestTotalTime,
-          secondTestTotalTime: latestResults.secondTestTotalTime,
-          allTestTotalTime: latestResults.allTestTotalTime,
-        };
+        selectedMusic: latestResults.selectedMusic || "NO",
+        firstTestTotalTime: latestResults.firstTestTotalTime,
+        secondTestTotalTime: latestResults.secondTestTotalTime,
+        allTestTotalTime: latestResults.allTestTotalTime,
+      };
 
-        await client.models.StroopTest.create(testData);
-      } catch (error) {
-        console.error("Error saving results:", error);
-      }
-    },
-    [userId, testStartTime]
-  );
+      await client.models.StroopTest.create(testData);
+    } catch (error) {
+      console.error("Error saving results:", error);
+    }
+  }, []);
 
   const getNextIndex = useCallback((currentIndex: number, excludeIndex: number): number => {
     const possibleIndices = Array.from({ length: COLOR_NAMES.length }, (_, i) => i).filter(
@@ -325,18 +324,9 @@ export function useStroopGame(userId: string) {
       try {
         const existingTests = await client.models.StroopTest.list({
           filter: {
-            and: [
-              {
-                userId: {
-                  eq: userId,
-                },
-              },
-              {
-                username: {
-                  eq: name,
-                },
-              },
-            ],
+            username: {
+              eq: name,
+            },
           },
         });
 
@@ -353,7 +343,7 @@ export function useStroopGame(userId: string) {
         return false;
       }
     },
-    [t, userId]
+    [t]
   );
 
   const handleGenderSelect = (gender: string) => {

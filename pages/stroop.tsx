@@ -1,4 +1,3 @@
-import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useRouter } from "next/router";
 import { useTranslation } from "@/contexts/LanguageContext";
 // import {useState} from 'react';
@@ -66,7 +65,6 @@ export interface Results {
 }
 
 export default function StroopTest() {
-  const { user } = useAuthenticator();
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -88,7 +86,7 @@ export default function StroopTest() {
     genderError,
     handleGenderSelect,
     startActualTest,
-  } = useStroopGame(user.username);
+  } = useStroopGame();
 
   const getColorTranslationKey = (colorName: string): string =>
     `stroopTest.colors.${colorName.toLowerCase()}`;

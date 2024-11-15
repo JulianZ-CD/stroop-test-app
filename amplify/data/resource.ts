@@ -9,7 +9,6 @@ const schema = a.schema({
 
   StroopTest: a
     .model({
-      userId: a.string(),
       username: a.string(),
       gender: a.string(),
       selectedMusic: a.string(),
@@ -30,7 +29,10 @@ const schema = a.schema({
       averageResponseTimeSecondSeries: a.float(),
       avgResponseDelay: a.float(),
     })
-    .authorization((allow) => [allow.owner()]),
+    .authorization((allow) => [
+      allow.publicApiKey().to(['create']),
+      allow.authenticated().to(['read', 'list']),
+    ]),
 });
 
 export type Schema = ClientSchema<typeof schema>;

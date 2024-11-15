@@ -1,7 +1,5 @@
-// pages/_app.tsx
 import "@/styles/app.css";
 import type { AppProps } from "next/app";
-import { Authenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
@@ -19,9 +17,7 @@ function AppContent({ Component, pageProps }: AppProps) {
         <title>{t("home.title")}</title>
       </Head>
       <h1>{t("home.title")} - SYDE640</h1>
-      <Authenticator>
-        <Component {...pageProps} />
-      </Authenticator>
+      <Component {...pageProps} />
     </>
   );
 }
