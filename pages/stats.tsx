@@ -46,7 +46,7 @@ function StatsContent() {
 
   useEffect(() => {
     listMusicStats();
-  }, []);
+  }, [listMusicStats]);
 
   return (
     <div className="stats-container">
