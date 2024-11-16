@@ -22,14 +22,14 @@ function StatsContent() {
     try {
       const { data: allTests } = await client.models.StroopTest.list();
 
-      // 定义音乐类型
       const musicTypes = [
         { key: "NO", label: t("stroopTest.musicSelection.no_music") },
         { key: "MOZART", label: t("stroopTest.musicSelection.mozart") },
         { key: "POP", label: t("stroopTest.musicSelection.pop_music") },
       ];
 
-      // 计算统计数据
+      console.log("All tests:", allTests);
+
       const stats: MusicStats[] = musicTypes.map(({ key, label }) => ({
         music: label,
         male: allTests.filter((test) => test.selectedMusic === key && test.gender === "male")
@@ -53,8 +53,7 @@ function StatsContent() {
       <h2>{t("home.statsSection.title")}</h2>
       <button className="sign-out-button" onClick={signOut}>
         {t("common.signOut")}
-      </button>
-      {' '}
+      </button>{" "}
       <button className="home-button" onClick={() => router.push("/")}>
         {t("common.backToHome")}
       </button>
