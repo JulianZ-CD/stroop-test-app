@@ -89,6 +89,10 @@ const frTranslations = {
         title: "Veuillez entrer votre nom d'utilisateur",
         placeholders: "Entrez votre nom d'utilisateur préféré",
       },
+      trialsInput: {
+        label: "Nombre d'essais par série",
+        placeholder: "Entrez le nombre d'essais (suggestion : {{suggestions}})",
+      },
       firstPhase: {
         title: "Première Phase - Série d'entraînement",
         instructions: `

@@ -30,7 +30,7 @@ const cnTranslations = {
     title: "斯特鲁普测试",
     instructions: {
       part1: "在第一轮（练习轮）中，所有单词都显示为黑色。",
-      part2: "在第二轮（测试轮）中，文字的颜色将与写出的颜色名称不匹配。请选择与文字颜色相匹配的色块。",
+      part2: "在第二轮（测试轮）中，文字的颜色将与写出的颜色名称不匹配。请��择与文字颜色相匹配的色块。",
       part3: "例如，如果你看到蓝色字体的\"红色\"，请选择\"蓝色\"色块，因为文字的颜色是蓝色。",
       totalTrials: "总试验次数：{{total}}（每轮{{perSeries}}次）",
     },
@@ -88,6 +88,10 @@ const cnTranslations = {
     username: {
       title: "请输入用户名",
       placeholders: "请输入您的昵称",
+    },
+    trialsInput: {
+      label: "每轮试验次数",
+      placeholder: "请输入试验次数（建议：{{suggestions}}）",
     },
     firstPhase: {
       title: "第一阶段 - 练习轮",

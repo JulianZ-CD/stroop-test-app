@@ -24,7 +24,7 @@ const enTranslations = {
       maleParticipants: "Male Participants",
       femaleParticipants: "Female Participants",
       totalParticipants: "Total Participants",
-    }
+    },
   },
   stroopTest: {
     title: "Stroop Test",
@@ -33,7 +33,8 @@ const enTranslations = {
         "In the first round, all colours are displayed in black font. Select the corresponding tile that matches the name of the colour.",
       part2:
         "In the second round, the colour of the font will not match the name of the colour that is written. Select the corresponding tile that matches the colour of the FONT.",
-      part3: "For example, if you see RED in blue font, select the \"blue\" tile because the font is blue.",
+      part3:
+        'For example, if you see RED in blue font, select the "blue" tile because the font is blue.',
       totalTrials: "Total trials: {{total}} ({{perSeries}} per series)",
     },
     colors: {
@@ -81,6 +82,10 @@ const enTranslations = {
       title: "Please enter your username",
       placeholders: "Enter your preferred username",
     },
+    trialsInput: {
+      label: "Number of trials per series",
+      placeholder: "Enter number of trials (suggested: {{suggestions}})",
+    },
     musicSelection: {
       title: "Select Background Music",
       mozart: "Mozart",
@@ -97,14 +102,14 @@ const enTranslations = {
       instructions: `
         In the first round, all colours are displayed in black font. Select the corresponding tile that matches the name of the colour written.<br/><br/>
         For example, if you see "<span style="color: black; font-weight: bold">YELLOW</span>", select the "yellow" tile.
-      `
+      `,
     },
     secondPhase: {
       title: "Second Phase - Test Round",
       instructions: `
         In the second round, the colour of the font will not match the name of the colour that is written. Select the corresponding tile that matches the colour of the FONT.<br/><br/>
         For example, if you see <span style="color: blue">RED</span>, select the "blue" tile because the font is blue.
-      `
+      `,
     },
   },
 };
