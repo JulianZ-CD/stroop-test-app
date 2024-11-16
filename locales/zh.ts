@@ -17,6 +17,14 @@ const cnTranslations = {
       languageReminder: "请选择您的母语",
       startButton: "开始斯特鲁普测试",
     },
+    statsSection: {
+      title: "统计数据",
+      description: "查看测试结果和统计数据（需要登录）",
+      viewStats: "查看统计",
+      maleParticipants: "男性参与者",
+      femaleParticipants: "女性参与者",
+      totalParticipants: "总参与者"
+    }
   },
   stroopTest: {
     title: "斯特鲁普测试",

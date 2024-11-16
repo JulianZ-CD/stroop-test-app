@@ -17,6 +17,14 @@ const frTranslations = {
         languageReminder: "Veuillez sélectionner votre langue maternelle",
         startButton: "Commencer le test de Stroop",
       },
+      statsSection: {
+        title: "Statistiques",
+        description: "Voir les résultats des tests et les statistiques (connexion requise)",
+        viewStats: "Voir les statistiques",
+        maleParticipants: "Participants masculins",
+        femaleParticipants: "Participants féminins",
+        totalParticipants: "Nombre total de participants"
+      }
     },
     stroopTest: {
       title: "Test de Stroop",
