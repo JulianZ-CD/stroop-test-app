@@ -161,7 +161,9 @@ export function useStroopGame() {
         allTestTotalTime: latestResults.allTestTotalTime,
       };
 
-      await client.models.StroopTest.create(testData);
+      await client.models.StroopTest.create(testData, {
+        authMode: 'apiKey'
+      });
     } catch (error) {
       console.error("Error saving results:", error);
     }
@@ -322,15 +324,25 @@ export function useStroopGame() {
       }
 
       try {
-        const existingTests = await client.models.StroopTest.list({
+        const response = await client.models.StroopTest.list({
           filter: {
-            username: {
-              eq: name,
-            },
+            or: [
+              {
+                username: {
+                  eq: name.trim()
+                }
+              },
+              {
+                username: {
+                  eq: name.trim().toLowerCase()
+                }
+              }
+            ]
           },
+          authMode: 'apiKey'
         });
-
-        if (existingTests.data.length > 0) {
+        
+        if (response.data.length > 0) {
           setUsernameError(t("stroopTest.errors.usernameTaken"));
           return false;
         }

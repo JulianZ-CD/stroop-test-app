@@ -30,8 +30,8 @@ const schema = a.schema({
       avgResponseDelay: a.float(),
     })
     .authorization((allow) => [
-      allow.publicApiKey().to(['create']),
-      allow.authenticated().to(['read', 'list']),
+      allow.publicApiKey().to(['create', 'read']),
+      allow.authenticated().to(['read']),
     ]),
 });
 
