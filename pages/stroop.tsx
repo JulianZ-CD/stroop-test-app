@@ -8,6 +8,7 @@ import { MusicSelection } from "@/components/stroop/MusicSelection";
 import { GenderSelection } from "@/components/stroop/GenderSelection";
 import { useStroopGame } from "@/hooks/useStroopGame";
 import parse from "html-react-parser";
+import { TrialsInput } from "@/components/stroop/TrialsInput";
 
 export const COLORS = {
   RED: "#ff0000",
@@ -18,8 +19,10 @@ export const COLORS = {
 } as const;
 
 export const COLOR_NAMES = ["red", "yellow", "blue", "black", "green"] as const;
-export const TRIALS_PER_SERIES = 6;
-export const MAX_MISTAKES_ALLOWED = TRIALS_PER_SERIES * 10.4;
+export const DEFAULT_TRIALS = 30;
+export const calculateMaxMistakes = (trials: number) => {
+  return trials * (trials < 10 ? 10.4 : 0.4);
+};
 
 export const MUSIC_OPTIONS = {
   MOZART: {
@@ -62,6 +65,7 @@ export interface Results {
   selectedMusic: MusicOption | null;
   username: string;
   gender: string;
+  trialsPerSeries: number;
 }
 
 export default function StroopTest() {
@@ -86,6 +90,8 @@ export default function StroopTest() {
     genderError,
     handleGenderSelect,
     startActualTest,
+    trialsPerSeries,
+    setTrialsPerSeries,
   } = useStroopGame();
 
   const getColorTranslationKey = (colorName: string): string =>
@@ -121,8 +127,8 @@ export default function StroopTest() {
               {t("stroopTest.instructions.part3")}
               <br />
               {t("stroopTest.instructions.totalTrials", {
-                total: TRIALS_PER_SERIES * 2,
-                perSeries: TRIALS_PER_SERIES,
+                total: trialsPerSeries * 2,
+                perSeries: trialsPerSeries,
               })}
             </p>
 
@@ -143,6 +149,12 @@ export default function StroopTest() {
               onMusicSelect={handleMusicSelection}
               musicOptions={MUSIC_OPTIONS}
               musicError={musicError}
+            />
+
+            <TrialsInput
+              trialsPerSeries={trialsPerSeries}
+              setTrialsPerSeries={setTrialsPerSeries}
+              defaultTrials={DEFAULT_TRIALS}
             />
 
             <div className="navigation-buttons">
@@ -192,7 +204,7 @@ export default function StroopTest() {
           :{" "}
           {t("stroopTest.progress.trial", {
             current: trialCount + 1,
-            total: TRIALS_PER_SERIES,
+            total: trialsPerSeries,
           })}
         </div>
 

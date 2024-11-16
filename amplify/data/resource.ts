@@ -16,6 +16,7 @@ const schema = a.schema({
       secondTestTotalTime: a.float(),
       allTestTotalTime: a.float(),
       timestamp: a.string(),
+      trialsPerSeries: a.integer(),
       rightFirstSeries: a.integer(),
       rightSecondSeries: a.integer(),
       mistakesFirstSeries: a.integer(),

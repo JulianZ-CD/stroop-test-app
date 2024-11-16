@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 import { useTranslation } from "@/contexts/LanguageContext";
@@ -8,10 +8,10 @@ import {
   MusicOption,
   ColorValue,
   COLOR_NAMES,
-  TRIALS_PER_SERIES,
   COLORS,
   MUSIC_OPTIONS,
-  MAX_MISTAKES_ALLOWED,
+  DEFAULT_TRIALS,
+  calculateMaxMistakes,
 } from "@/pages/stroop";
 
 const client = generateClient<Schema>();
@@ -25,6 +25,7 @@ interface StroopTestModel {
   userId: string;
   username: string;
   timestamp: string;
+  trialsPerSeries: number;
   rightFirstSeries: number;
   rightSecondSeries: number;
   mistakesFirstSeries: number;
@@ -67,6 +68,7 @@ export function useStroopGame() {
     correctColor: COLORS.RED,
   });
   const [results, setResults] = useState<Results>({
+    trialsPerSeries: DEFAULT_TRIALS,
     rightFirstSeries: 0,
     rightSecondSeries: 0,
     mistakesFirstSeries: 0,
@@ -91,6 +93,8 @@ export function useStroopGame() {
   const [secondTestStartTime, setSecondTestStartTime] = useState<number | null>(null);
   const [firstTestTotalTime, setFirstTestTotalTime] = useState<number>(0);
   const [secondTestTotalTime, setSecondTestTotalTime] = useState<number>(0);
+  const [trialsPerSeries, setTrialsPerSeries] = useState(DEFAULT_TRIALS);
+  const maxMistakesAllowed = useMemo(() => calculateMaxMistakes(trialsPerSeries), [trialsPerSeries]);
 
   const handleMusicSelection = useCallback((music: MusicOption) => {
     if (audioRef.current) {
@@ -128,7 +132,7 @@ export function useStroopGame() {
         mistakesSecondSeries: latestResults.mistakesSecondSeries,
         averageResponsePercent:
           ((latestResults.rightFirstSeries + latestResults.rightSecondSeries) /
-            (TRIALS_PER_SERIES * 2)) *
+            (trialsPerSeries * 2)) *
           100,
         minTimeFirstSeries: Math.round((latestResults.minTimeFirstSeries / 1000) * 100) / 100,
         minTimeSecondSeries: Math.round((latestResults.minTimeSecondSeries / 1000) * 100) / 100,
@@ -136,22 +140,22 @@ export function useStroopGame() {
         maxTimeSecondSeries: Math.round((latestResults.maxTimeSecondSeries / 1000) * 100) / 100,
         averageResponseTimeFirstSeries:
           Math.round(
-            (latestResults.responseTimes.slice(0, TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
-              TRIALS_PER_SERIES /
+            (latestResults.responseTimes.slice(0, trialsPerSeries).reduce((a, b) => a + b, 0) /
+              trialsPerSeries /
               1000) *
               100
           ) / 100,
         averageResponseTimeSecondSeries:
           Math.round(
-            (latestResults.responseTimes.slice(TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
-              TRIALS_PER_SERIES /
+            (latestResults.responseTimes.slice(trialsPerSeries).reduce((a, b) => a + b, 0) /
+              trialsPerSeries /
               1000) *
               100
           ) / 100,
         avgResponseDelay:
           Math.round(
             (latestResults.responseTimes.reduce((a, b) => a + b, 0) /
-              (TRIALS_PER_SERIES * 2) /
+              (trialsPerSeries * 2) /
               1000) *
               100
           ) / 100,
@@ -245,7 +249,7 @@ export function useStroopGame() {
               ? newResults.mistakesFirstSeries
               : newResults.mistakesSecondSeries;
 
-          if (currentMistakes >= MAX_MISTAKES_ALLOWED && !hasShownError.current) {
+          if (currentMistakes >= maxMistakesAllowed && !hasShownError.current) {
             hasShownError.current = true;
             alert(t("stroopTest.alerts.tooManyErrors"));
             window.location.reload();
@@ -261,7 +265,7 @@ export function useStroopGame() {
       const newTrialCount = trialCount + 1;
 
       // First phase completion
-      if (newTrialCount === TRIALS_PER_SERIES && testState === "first") {
+      if (newTrialCount === trialsPerSeries && testState === "first") {
         if (firstTestStartTime) {
           const firstTotalTime = (Date.now() - firstTestStartTime) / 1000;
           setFirstTestTotalTime(firstTotalTime);
@@ -275,7 +279,7 @@ export function useStroopGame() {
       }
 
       // Second phase completion
-      if (newTrialCount === TRIALS_PER_SERIES && testState === "second") {
+      if (newTrialCount === trialsPerSeries && testState === "second") {
         if (secondTestStartTime) {
           const secondTotalTime = (Date.now() - secondTestStartTime) / 1000;
           setSecondTestTotalTime(secondTotalTime);
@@ -405,6 +409,7 @@ export function useStroopGame() {
 
       setTrialCount(0);
       setResults({
+        trialsPerSeries: DEFAULT_TRIALS,
         rightFirstSeries: 0,
         rightSecondSeries: 0,
         mistakesFirstSeries: 0,
@@ -463,5 +468,7 @@ export function useStroopGame() {
     genderError,
     handleGenderSelect,
     startActualTest,
+    trialsPerSeries,
+    setTrialsPerSeries,
   };
 }
