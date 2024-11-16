@@ -1,6 +1,6 @@
 import { useTranslation } from "@/contexts/LanguageContext";
 import { useRouter } from "next/router";
-import { Results, TRIALS_PER_SERIES } from "@/pages/stroop";
+import { Results } from "@/pages/stroop";
 
 interface ResultsViewProps {
   results: Results;
@@ -43,8 +43,8 @@ export function ResultsView({
           <div>
             {t("stroopTest.results.avgResponseTime")}:{" "}
             {formatTime(
-              results.responseTimes.slice(0, TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
-                TRIALS_PER_SERIES
+              results.responseTimes.slice(0, results.trialsPerSeries).reduce((a, b) => a + b, 0) /
+                results.trialsPerSeries
             )}
           </div>
           <div>
@@ -69,8 +69,8 @@ export function ResultsView({
           <div>
             {t("stroopTest.results.avgResponseTime")}:{" "}
             {formatTime(
-              results.responseTimes.slice(TRIALS_PER_SERIES).reduce((a, b) => a + b, 0) /
-                TRIALS_PER_SERIES
+              results.responseTimes.slice(results.trialsPerSeries).reduce((a, b) => a + b, 0) /
+                results.trialsPerSeries
             )}
           </div>
           <div>
@@ -83,14 +83,17 @@ export function ResultsView({
           <div>
             {t("stroopTest.results.totalAccuracy")}:{" "}
             {(
-              ((results.rightFirstSeries + results.rightSecondSeries) / (TRIALS_PER_SERIES * 2)) *
+              ((results.rightFirstSeries + results.rightSecondSeries) /
+                (results.trialsPerSeries * 2)) *
               100
             ).toFixed(1)}
             %
           </div>
           <div>
             {t("stroopTest.results.avgResponseTime")}:{" "}
-            {formatTime(results.responseTimes.reduce((a, b) => a + b, 0) / (TRIALS_PER_SERIES * 2))}
+            {formatTime(
+              results.responseTimes.reduce((a, b) => a + b, 0) / (results.trialsPerSeries * 2)
+            )}
           </div>
           <div>
             {t("stroopTest.results.totalTestingTime")}: {results.allTestTotalTime.toFixed(2)}s
