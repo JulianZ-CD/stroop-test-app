@@ -1,6 +1,6 @@
 # Stroop Test Application with AWS Amplify
 
-> Try it now: [Stroop Test App](https://main.ds0t19nwq4vif.amplifyapp.com)
+> Try it now: [Stroop Test App](https://public.ds0t19nwq4vif.amplifyapp.com)
 
 This application is a full-stack Next.js implementation of the Stroop Test, integrated with AWS Amplify for backend services. The Stroop Test is a widely used psychological test that measures cognitive abilities and response times.
 
