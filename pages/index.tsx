@@ -47,13 +47,14 @@ export default function App() {
     <main>
       <div className="header">
         {/* <h1>{t("home.title")}</h1> */}
-        <p>Group 1: Julian (Web Dev); Brad, Yufei (Data Analyst)</p>
+        <p>SYDE640 Group 1: Julian (Web Dev); Brad, Yufei (Data Analyst)</p>
         <select
           value={locale}
           onChange={(e) => changeLocale(e.target.value as "en" | "zh")}
           className="language-selector"
         >
           <option value="en">English</option>
+          <option value="hi">हिंदी</option>
           <option value="zh">简体中文</option>
           <option value="fr">Français</option>
         </select>

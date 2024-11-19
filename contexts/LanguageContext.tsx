@@ -4,9 +4,10 @@ import { useRouter } from "next/router";
 import en from "@/locales/en";
 import zh from "@/locales/zh";
 import fr from "@/locales/fr";
+import hi from "@/locales/hi";
 
 // Define available translations with const assertion for type safety
-const translations = { en, zh, fr } as const;
+const translations = { en, zh, fr, hi } as const;
 // Extract locale type from translations object
 type Locale = keyof typeof translations;
 // Use English translations as the base type
