@@ -30,6 +30,8 @@ This application is a full-stack Next.js implementation of the Stroop Test, inte
 - Authentication: Amazon Cognito
 - Database: Amazon DynamoDB
 - API: AWS AppSync (GraphQL)
+- Lambda: Auto-generated resolvers and infrastructure management
+- Storage: Amazon S3 for GraphQL codegen artifacts
 - Styling: Custom CSS
 
 ### System Architecture
@@ -41,15 +43,17 @@ graph LR
     B -->|JWT Token| A
     
     A -->|GraphQL Request| C[AWS AppSync]
-    C -->|Transform Request| D[DynamoDB]
-    D -->|Return Data| C
+    C -->|Transform Request| D[Lambda Resolvers]
+    D -->|Database Operations| E[DynamoDB]
+    E -->|Return Data| D
+    D -->|Formatted Response| C
     C -->|GraphQL Response| A
     
-    E[AWS Amplify CLI] -->|Deploy| F[AWS CloudFormation]
-    F -->|Create Resources| G[AWS Infrastructure]
+    F[AWS Amplify CLI] -->|Deploy| G[AWS CloudFormation]
+    G -->|Create Resources| H[AWS Infrastructure]
     
-    H[Git Push] -->|Trigger| I[Amplify CI/CD]
-    I -->|Build & Deploy| A
+    I[Git Push] -->|Trigger| J[Amplify CI/CD]
+    J -->|Build & Deploy| A
 ```
 
 #### Authentication Flow
@@ -57,9 +61,12 @@ graph LR
 graph LR
     A[User] -->|Login| B[Authenticator Component]
     B -->|Credentials| C[Amazon Cognito]
+    C -->|Verification Email| D[Amazon SES]
+    D -->|Send Email| E[User Email]
+    E -->|Verify Code| C
     C -->|JWT Token| B
-    B -->|Store Token| D[Amplify Auth]
-    D -->|Auth Context| E[Protected Routes]
+    B -->|Store Token| F[Amplify Auth]
+    F -->|Auth Context| G[Protected Routes]
 ```
 
 #### Stroop Test Data Flow
@@ -81,7 +88,7 @@ graph LR
     A[Local Development] -->|Git Push| B[GitHub Repository]
     B -->|Trigger| C[Amplify Console]
     C -->|Build| D[Next.js Build]
-    D -->|Deploy| E[AWS CloudFront]
+    D -->|Deploy| E[Amplify Hosting]
     E -->|Serve| F[End Users]
     
     G[Amplify CLI] -->|Configure| H[Backend Resources]
