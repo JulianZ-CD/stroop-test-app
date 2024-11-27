@@ -54,6 +54,9 @@ graph LR
     
     I[Git Push] -->|Trigger| J[Amplify CI/CD]
     J -->|Build & Deploy| A
+    
+    C -->|Store Codegen| L[Amazon S3]
+    L -->|Load Schema| C
 ```
 
 #### Authentication Flow
